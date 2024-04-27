@@ -3,18 +3,22 @@ import { publicProcedure, router } from './trpc';
 import { auth, currentUser } from "@clerk/nextjs/server";
 import service from '@/firebase/firestore';
 export const appRouter = router({
-    registerToFirestore: publicProcedure.mutation(async()=>{
+    registerToFirestore: publicProcedure.mutation(async () => {
         const user = await currentUser();
-        if(!user){
-            throw new TRPCError({code:'UNAUTHORIZED'})
+        if (!user) {
+            throw new TRPCError({ code: 'UNAUTHORIZED' });
         }
-        try{
-            const userData = await service.register({uId:user.id,  email:user.emailAddresses[0].emailAddress, username:user.username, createdAt: user.createdAt})
-        }catch(err){
-            throw new TRPCError({code:'BAD_REQUEST'})
-
+        try {
+            await service.register({
+                uId: user.id,
+                email: user.emailAddresses[0].emailAddress,
+                username: user.username,
+                createdAt: user.createdAt
+            });
+            return true;
+        } catch (err) {
+            throw new TRPCError({ code: 'BAD_REQUEST' });
         }
-
     })
   // ...
 });
