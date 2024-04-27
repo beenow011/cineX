@@ -37,6 +37,7 @@ export const PinContainer = ({
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
         >
+
             <div
                 style={{
                     perspective: "1000px",
