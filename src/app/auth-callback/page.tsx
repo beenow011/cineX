@@ -1,8 +1,9 @@
+'use client';
 import { Loader2 } from "lucide-react";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { trpc } from "../_trpc/client";
 import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { error } from "console";
 
 
@@ -16,7 +17,8 @@ const Page = () => {
     const origin = searchParams.get('origin')
 
     const { mutate: register } = trpc.registerToFirestore.useMutation({
-        onSuccess: () => {
+        onSuccess: (data) => {
+            console.log(data)
             router.push('/dashboard')
         },
         onError: (error) => {
@@ -29,6 +31,9 @@ const Page = () => {
         }
     }
     )
+    useEffect(() => {
+        register()
+    }, [])
 
     // Check for errors in the query result
 
@@ -36,9 +41,9 @@ const Page = () => {
 
 
     return (
-        <div className='w-full mt-24 flex justify-center'>
+        <div className='w-full mt-24 flex justify-center text-white'>
             <div className='flex flex-col items-center gap-2'>
-                <Loader2 className='h-8 w-8 animate-spin text-zinc-800' />
+                <Loader2 className='h-8 w-8 animate-spin text-white' />
                 <h3 className='font-semibold text-xl'>
                     Setting up your account...
                 </h3>

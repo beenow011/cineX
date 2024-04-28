@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from '@clerk/nextjs'
 import Providers from "@/components/Providers";
+import { Header } from "@/components/Header";
+import { WavyBackground } from "@/components/ui/wavy-background";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -19,7 +21,10 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <Providers>
-          <body className={inter.className}>{children}</body>
+          <body className={inter.className}>
+            <WavyBackground className=" pb-40 justify-start items-start">
+              <Header />
+              {children}</WavyBackground></body>
         </Providers>
       </html>
     </ClerkProvider>

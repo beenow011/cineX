@@ -9,13 +9,13 @@ export const appRouter = router({
             throw new TRPCError({ code: 'UNAUTHORIZED' });
         }
         try {
-            await service.register({
+            const data = await service.register({
                 uId: user.id,
                 email: user.emailAddresses[0].emailAddress,
                 username: user.username,
                 createdAt: user.createdAt
             });
-            return true;
+            return data;
         } catch (err) {
             throw new TRPCError({ code: 'BAD_REQUEST' });
         }
