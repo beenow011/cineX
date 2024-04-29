@@ -36,6 +36,22 @@ export const appRouter = router({
         }catch(err){
             throw new TRPCError({ code: 'BAD_REQUEST' });
         }
+    }),
+    retriveMoviesFromMovieName : privateProcedure.input(z.object({movie: z.string()})).mutation(async({input , ctx})=>{
+        const {movie} = input
+        const url = `http://www.omdbapi.com/?apikey=e12df4ca&t=${movie}`;
+        try{
+            const res = await fetch(url);
+            const data = await res.json();
+            if(data.Response){
+                return data
+            }else{
+                throw new TRPCError({code:'NOT_FOUND' , message:data.Error})
+            }
+
+        }catch(err){
+            throw new TRPCError({ code: 'BAD_REQUEST' });
+        }
     })
   // ...
 });
