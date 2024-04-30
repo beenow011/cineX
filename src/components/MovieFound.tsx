@@ -1,18 +1,34 @@
 'use client';
+import { trpc } from "@/app/_trpc/client"
 import { MovieContext } from "@/context/MovieContext"
-import { useContext } from "react"
-import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
-import { MovieInfo } from "./MovieInfo";
 import { Loader2Icon } from "lucide-react";
-import { Button } from "./ui/button";
-export const MovieRes = () => {
-    const { res, loading, searchSimilarMovies } = useContext(MovieContext)
+import { useContext, useEffect, useState } from "react"
+import { MovieInfo } from "./MovieInfo";
+
+export const MovieFound = () => {
+    const [res, setRes] = useState<any>({})
+    const { searchMovieByID, similarMovieId, imdbId, movie } = useContext(MovieContext)
+    const { mutate: searchFromApiById, isLoading: isLoading1 } = trpc.retriveMoviesFromImdb.useMutation({
+        onSuccess: (data) => {
+            console.log(data)
+            setRes(data)
+        }
+    })
+    useEffect(() => {
+        if (similarMovieId && (Object.keys(res).length === 0 || res.Response === 'False')) {
+            searchFromApiById({ imdbId: similarMovieId })
+        }
+    }, [similarMovieId])
+
+    useEffect(() => {
+        setRes({})
+    }, [movie, imdbId])
     return (
         <div>
             <div className="mx-2.5 w-full bg-slate-700/40 mt-5 p-3 rounded-md">
                 {
 
-                    loading ? (
+                    isLoading1 ? (
                         <div className="flex justify-center items-center">
                             <Loader2Icon className="animate-spin text-white h-10" />
                         </div>
@@ -60,15 +76,7 @@ export const MovieRes = () => {
                     )
                 }
             </div>
-            <div className="w-full  flex mt-5  justify-center items-center">
 
-
-                <Button className="bg-cyan-600 hover:bg-cyan-900" onClick={searchSimilarMovies}>
-                    Similar Movies
-                </Button>
-
-
-            </div>
         </div>
     )
 }

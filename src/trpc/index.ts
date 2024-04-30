@@ -3,6 +3,8 @@ import {z} from 'zod'
 import { privateProcedure, publicProcedure, router } from './trpc';
 import { auth, currentUser } from "@clerk/nextjs/server";
 import service from '@/firebase/firestore';
+import { OpenAIStream } from 'ai';
+import { openai } from '@/lib/openai';
 export const appRouter = router({
     registerToFirestore: publicProcedure.mutation(async () => {
         const user = await currentUser();
@@ -40,6 +42,7 @@ export const appRouter = router({
     retriveMoviesFromMovieName : privateProcedure.input(z.object({movie: z.string()})).mutation(async({input , ctx})=>{
         const {movie} = input
         const url = `http://www.omdbapi.com/?apikey=e12df4ca&t=${movie}`;
+       
         try{
             const res = await fetch(url);
             const data = await res.json();
@@ -52,7 +55,41 @@ export const appRouter = router({
         }catch(err){
             throw new TRPCError({ code: 'BAD_REQUEST' });
         }
-    })
+    }),
+    searchSimilarMovies : privateProcedure.input(z.object({Title:z.string() , imdbID : z.string()})).mutation(async({input , ctx})=>{
+        const {Title , imdbID}= input
+        let json 
+            try{
+                const response = await openai.chat.completions.create({
+                    model: 'gpt-3.5-turbo',
+                    temperature: 0.7, // Adjust the temperature as needed
+                    stream: true,
+                    messages: [
+                        {
+                            role: 'system',
+                            content: `Given a movie with the title ${Title} and IMDb ID ${imdbID}, please return the IMDb ID of a movie with similar plot in the format of JSON {
+                                title: 'xyz',
+                                imdb_id: 'xyz',
+                                similar_movie_imdb_id: 'xyz'
+                              }`,
+                        }
+                    ],
+                })
+                console.log(response)
+                const stream = OpenAIStream(response, {
+                    async onCompletion(completion) {
+                        console.log("4",JSON.parse(completion))
+                        // return JSON.parse(completion)
+                        json = JSON.parse(completion)
+                    },
+                });
+                console.log(json)
+                // return json
+        }catch(err){
+            throw new TRPCError({code:'BAD_REQUEST'})
+        }
+    }
+    )
   // ...
 });
  

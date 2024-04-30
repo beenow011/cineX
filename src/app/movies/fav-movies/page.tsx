@@ -1,9 +1,14 @@
+'use client';
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
+import { MovieFound } from "@/components/MovieFound";
 import { MovieInput } from "@/components/MovieInput";
 import { MovieRes } from "@/components/MovieRes";
-import { MovieProvider } from "@/context/MovieContext";
+import { Button } from "@/components/ui/button";
+import { MovieContext, MovieProvider } from "@/context/MovieContext";
+import { useContext } from "react";
 
 export default function Page() {
+    // console.log(res)s
     return (
         <div>
             <MovieProvider>
@@ -13,6 +18,7 @@ export default function Page() {
                     </h1>
                     <MovieInput />
                     <MovieRes />
+                    <MovieFound />
                 </MaxWidthWrapper>
             </MovieProvider>
         </div>)
