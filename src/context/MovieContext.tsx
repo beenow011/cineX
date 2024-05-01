@@ -57,15 +57,15 @@ export const MovieProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     )
 
 
-    const searchForSimilarMovies = async ({ Title, imdbID }: { Title: string, imdbID: string }) => {
+    const searchForSimilarMovies = async ({ Title, imdbID, Genre }: { Title: string, imdbID: string, Genre: string }) => {
         try {
-            console.log("1", Title, imdbID)
+            // console.log("1", Title, imdbID)
             const requestBody = {
                 Title: Title,
                 imdbID: imdbID
             };
             // Making a GET request with query parameters
-            const response = await fetch(`/api/fav-movies?Title=${encodeURIComponent(Title)}&imdbID=${encodeURIComponent(imdbID)}`, {
+            const response = await fetch(`/api/fav-movies?Title=${encodeURIComponent(Title)}&imdbID=${encodeURIComponent(imdbID)}&Genre=${encodeURIComponent(Genre)}`, {
                 method: 'GET'
             });
 
@@ -102,7 +102,7 @@ export const MovieProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
     const searchSimilarMovies = () => {
         if (res && res.Title && res.imdbID) {
-            searchForSimilarMovies({ Title: res.Title as string, imdbID: res.imdbID as string }).then(async (res) => {
+            searchForSimilarMovies({ Title: res.Title as string, imdbID: res.imdbID as string, Genre: res.Genre as string }).then(async (res) => {
                 const reader = res?.body?.pipeThrough(new TextDecoderStream()).getReader();
                 let resptext = "";
                 console.log(reader)

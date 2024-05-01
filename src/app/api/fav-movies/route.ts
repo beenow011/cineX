@@ -15,10 +15,10 @@ export const GET = async(req: NextRequest , res:NextApiResponse)=>{
     const url = new URL(req.url);
     const searchparam = new URLSearchParams(url.searchParams)
     const Title = searchparam.get('Title')
-    const imdbID = searchparam.get('imdbID'
-)
-
-    // console.log(2,Title)
+    const imdbID = searchparam.get('imdbID')
+    const Genre = searchparam.get('Genre')
+// 
+    console.log(2,Genre)
     if (!Title || !imdbID) {
         return res.status(400).json({ error: 'Title and imdbID are required query parameters' });
     }
@@ -26,14 +26,14 @@ export const GET = async(req: NextRequest , res:NextApiResponse)=>{
     // return res.status(400).json({ error: 'Title and imdbID are required query parameters' });
     try{
         const response = await openai.chat.completions.create({
-            model: 'gpt-3.5-turbo-16k',
+            model: 'gpt-3.5-turbo',
             temperature: 0.7, // Adjust the temperature as needed
             stream: true,
             messages: [
               {
                   role: 'system',
-                  content: `Given a movie with the title ${Title} and IMDb ID ${imdbID}, please return the IMDb ID of a movie with similar plot (movie should be in the same language) in the format of JSON:{
-              similar_movie_imdb_id: 'xyz'
+                  content: `under rated Movie with Genre ${Genre} which is similar to ${Title}(${imdbID}) in the format of JSON:{
+              imdbid1: 'xyz',
           }`,
               }
           ],

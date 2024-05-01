@@ -23,12 +23,14 @@ export const Features = () => {
                     containerClassName="mt-32"
                 >
                     <div className="flex-1">
-                        <h1 className="text-cyan-400 font-bold text-3xl m-3">
-                            Discover Movies Inspired by Your Favorite Films!
-                        </h1>
-                        <p className="text-white text-justify truncate md:overflow-visible md:text-wrap">
-                            Dive into a world of cinematic wonders where each movie recommendation is tailored to your unique taste. Our platform analyzes your favorite films and suggests captivating titles that share similar themes, genres, or storytelling elements. Whether you&apos;re a die-hard fan of action-packed blockbusters, heartwarming dramas, or mind-bending thrillers, our curated selection ensures that every viewing experience is an adventure waiting to unfold. Get ready to explore new cinematic horizons and uncover hidden gems inspired by the movies you already love!
-                        </p>
+                        <Link href='/movies/fav-movies'>
+                            <h1 className="text-cyan-400 font-bold text-3xl m-3">
+                                Discover Movies Inspired by Your Favorite Films!
+                            </h1>
+                            <p className="text-white text-justify truncate md:overflow-visible md:text-wrap">
+                                Dive into a world of cinematic wonders where each movie recommendation is tailored to your unique taste. Our platform analyzes your favorite films and suggests captivating titles that share similar themes, genres, or storytelling elements. Whether you&apos;re a die-hard fan of action-packed blockbusters, heartwarming dramas, or mind-bending thrillers, our curated selection ensures that every viewing experience is an adventure waiting to unfold. Get ready to explore new cinematic horizons and uncover hidden gems inspired by the movies you already love!
+                            </p>
+                        </Link>
                     </div>
                     <div className="flex-1 ">
                         <Clapperboard className="h-full w-full text-cyan-600" />
