@@ -9,6 +9,7 @@ import { useContext } from "react";
 
 export default function Page() {
     // console.log(res)s
+    // const { res, loading } = useContext(MovieContext)
     return (
         <div>
             <MovieProvider>

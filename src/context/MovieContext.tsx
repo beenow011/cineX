@@ -15,8 +15,9 @@ interface contextParams {
     searchMovieByID: () => void
     searchMovieByName: () => void
     loading: boolean
+    loading2: boolean
     res: any
-    similarMovieId: string | null
+    res2: any
 
 }
 export const MovieContext = createContext<contextParams>({
@@ -28,8 +29,10 @@ export const MovieContext = createContext<contextParams>({
     searchMovieByID: () => { },
     searchMovieByName: () => { },
     loading: false,
+    loading2: false,
+
     res: {},
-    similarMovieId: ''
+    res2: {}
 });
 
 export const MovieProvider: React.FC<{ children: React.ReactNode }> = ({ children }: { children: ReactNode }) => {
@@ -38,12 +41,20 @@ export const MovieProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const [movie, setMovie] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
     const [res, setRes] = useState<any>({});
+    const [res2, setRes2] = useState<any>({});
     const [answer, setAnswer] = useState('')
 
     const { mutate: searchFromApiById, isLoading: isLoading1 } = trpc.retriveMoviesFromImdb.useMutation({
         onSuccess: (data) => {
             console.log(data)
             setRes(data)
+        }
+    }
+    )
+    const { mutate: searchFromApiById2, isLoading: loading2 } = trpc.retriveMoviesFromImdb.useMutation({
+        onSuccess: (data) => {
+            console.log(data)
+            setRes2(data)
         }
     }
     )
@@ -57,7 +68,11 @@ export const MovieProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     )
 
 
-    const searchForSimilarMovies = async ({ Title, imdbID, Genre }: { Title: string, imdbID: string, Genre: string }) => {
+    // useEffect(() => {
+    //     setRes({})
+    // }, [movie, imdbId])
+
+    const searchForSimilarMovies = async ({ Title, imdbID, Language }: { Title: string, imdbID: string, Language: string }) => {
         try {
             // console.log("1", Title, imdbID)
             const requestBody = {
@@ -65,7 +80,7 @@ export const MovieProvider: React.FC<{ children: React.ReactNode }> = ({ childre
                 imdbID: imdbID
             };
             // Making a GET request with query parameters
-            const response = await fetch(`/api/fav-movies?Title=${encodeURIComponent(Title)}&imdbID=${encodeURIComponent(imdbID)}&Genre=${encodeURIComponent(Genre)}`, {
+            const response = await fetch(`/api/fav-movies?Title=${encodeURIComponent(Title)}&imdbID=${encodeURIComponent(imdbID)}&Language=${encodeURIComponent(Language)}`, {
                 method: 'GET'
             });
 
@@ -100,12 +115,15 @@ export const MovieProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         searchFromApiByName({ movie })
     }
 
+    // console.log(Language)
+
     const searchSimilarMovies = () => {
         if (res && res.Title && res.imdbID) {
-            searchForSimilarMovies({ Title: res.Title as string, imdbID: res.imdbID as string, Genre: res.Genre as string }).then(async (res) => {
+            const Language = res?.Language.split(',')
+            searchForSimilarMovies({ Title: res.Title as string, imdbID: res.imdbID as string, Language: Language[0] as string }).then(async (res) => {
                 const reader = res?.body?.pipeThrough(new TextDecoderStream()).getReader();
                 let resptext = "";
-                console.log(reader)
+                // console.log(reader)
                 while (true) {
 
                     const { value, done } = await reader?.read()!;
@@ -118,31 +136,39 @@ export const MovieProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
                     resptext += value;
 
-                    setAnswer(resptext);
+                    // setAnswer(resptext);
 
                 }
+                setAnswer(getImdbID(resptext))
+                searchFromApiById2({ imdbId: answer })
                 // console.log("Movie", res?.url)
             }
+
+
             )
         }
     }
 
-    const cleanedString = answer
-        .replace(/["\n:'\\n ]/g, '').trim();
-    console.log(cleanedString)
-    const matchid = cleanedString.match(/tt\d+/);
-    const id = matchid ? matchid[0].match(/tt\d+/) : null;
-    const resStr = id ? id[0] : null;
-    console.log(resStr)
+    const getImdbID = (answer: string) => {
 
-    const similarMovieId = resStr ? resStr.slice(0, 2) + resStr.slice(3, 6) + resStr.slice(7, 10) + resStr.slice(11, 12) : ''
-    console.log(similarMovieId)
+        const cleanedString = answer
+            .replace(/["\n:'\\n ]/g, '').trim();
+        // console.log(cleanedString)
+        const matchid = cleanedString.match(/tt\d+/);
+        const id = matchid ? matchid[0].match(/tt\d+/) : null;
+        const resStr = id ? id[0] : null;
+        // console.log(resStr)
+
+        const similarMovieId = resStr ? resStr.slice(0, 2) + resStr.slice(3, 6) + resStr.slice(7, 10) + resStr.slice(11, 12) : ''
+        return similarMovieId
+    }
+    // console.log(similarMovieId)
 
 
 
     return (
 
-        <MovieContext.Provider value={{ imdbId, setImdbId, searchSimilarMovies, movie, setMovie, searchMovieByID, loading, searchMovieByName, res, similarMovieId }}>
+        <MovieContext.Provider value={{ imdbId, setImdbId, searchSimilarMovies, movie, setMovie, searchMovieByID, loading, loading2, searchMovieByName, res, res2 }}>
             {children}
 
         </MovieContext.Provider>
