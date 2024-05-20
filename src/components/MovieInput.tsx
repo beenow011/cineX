@@ -18,7 +18,7 @@ export const MovieInput = () => {
 
     // console.log(imdbId, movie)
     return (
-        <div className="w-full h-full mx-2.5 bg-slate-700 p-3 divide-y-2 md:divide-y-0 flex-col md:flex-row md:divide-x-2 divide-slate-400 flex mt-3.5 justify-between items-center rounded-md">
+        <div className="w-full h-full mx-2.5 bg-black p-3 divide-y-2 md:divide-y-0 flex-col md:flex-row md:divide-x-2 divide-slate-400 flex mt-3.5 justify-between items-center rounded-md">
             <div className="p-3 flex-1 flex flex-col justify-center items-center">
                 <h1 className="text-cyan-400 mb-3 font-semibold">Search the movie by IMDB id</h1>
                 <label htmlFor="id" className="text-slate-300 text-xl mb-1.5 font-semibold">IMDB ID</label>

@@ -32,9 +32,11 @@ export const GET = async(req: NextRequest , res:NextApiResponse)=>{
             messages: [
               {
                 role: 'system',
-                content: `Find a ${Language} movie with a plot similar to "${Title}" (${imdbID}) and return the result in the format of JSON:{
-                    imdbid1: 'xyz',
-                }`,
+                content: `Find a ${Language} movie with a plot similar to "${Title}" (${imdbID}), but exclude any sequels or prequels, and return the result in JSON format:
+                {
+                    "imdbid1": "xyz"
+                }
+                 `,
               }
             ]
           });

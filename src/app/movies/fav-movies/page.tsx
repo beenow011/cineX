@@ -17,6 +17,7 @@ export default function Page() {
                     <h1 className="text-2xl font-semibold antialiased text-zinc-300 ">
                         Let us find your new favorite movie..!
                     </h1>
+
                     <MovieInput />
                     <MovieRes />
                     <MovieFound />
