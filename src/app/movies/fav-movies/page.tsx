@@ -19,6 +19,7 @@ export default function Page() {
                     </h1>
 
                     <MovieInput />
+
                     <MovieRes />
                     <MovieFound />
                 </MaxWidthWrapper>

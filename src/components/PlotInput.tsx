@@ -1,6 +1,8 @@
 'use client';
 
+import { useContext, useState } from "react";
 import { PlaceholdersAndVanishInput } from "./ui/placeholders-and-vanish-input";
+import { PlotContext } from "@/context/PlotContext";
 
 export const PlotInput = () => {
     "use client";
@@ -15,21 +17,29 @@ export const PlotInput = () => {
         "Consider a narrative where love transcends time and space. What obstacles stand in the way of true connection?"
     ];
 
+    const [plot, setPlotLocal] = useState('')
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         console.log(e.target.value);
+        setPlot(e.target.value)
     };
+    const { Plot, setPlot, searchPlot } = useContext(PlotContext)
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log("submitted");
+        searchPlot();
+
     };
+
     return (
-        <div className="h-[40rem] flex flex-col justify-center  items-center px-4">
+        <div className=" flex flex-col justify-center  items-center px-4">
             <h2 className="text-xl mb-4 text-center font-semibold antialiased  sm:text-5xl text-red-400 ">
                 What&apos;s on your mind today?
             </h2>
             <p className="text-cyan-600 text-xl    font-bold mb-10 sm:mb-20">
                 Describe the kind of movie plot you're in the mood for, and I'll find you a similar movie!
             </p>
+
             <PlaceholdersAndVanishInput
                 placeholders={placeholders}
                 onChange={handleChange}

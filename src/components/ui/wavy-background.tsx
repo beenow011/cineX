@@ -68,11 +68,6 @@ export const WavyBackground = ({
         "#FF5252", // Light Red
         "#D50000", // Dark Red
         "#FFABAB", // Lighter Red
-        // "#C70039", // Darker Red
-        // "#228B22", // Green
-        // "#000080", // Blue
-        // "#800080", // Purple
-        // "#DAA520", // Yellow
         "#008080", // Cyan
     ];
 

@@ -15,8 +15,11 @@ interface params {
 export const MovieCard = ({ res, loading, flag }: params) => {
     const { searchSimilarMovies } = useContext(MovieContext)
     return (
+
+
         <div>
-            <div className="mx-2.5 w-full bg-slate-700/40 mt-5 p-3 rounded-md">
+
+            <div className="mx-2.5 w-full bg-gradient-to-r from-black to-slate-700 mt-5 p-3 rounded-md shadow-inner  shadow-white/30">
                 {
 
                     loading ? (
@@ -68,6 +71,8 @@ export const MovieCard = ({ res, loading, flag }: params) => {
                     )
                 }
             </div>
+
+
             {
                 flag && (
                     <div className="w-full  flex mt-5  justify-center items-center">
@@ -83,5 +88,8 @@ export const MovieCard = ({ res, loading, flag }: params) => {
             }
 
         </div>
+
     )
+
+
 }
