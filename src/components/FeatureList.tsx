@@ -45,12 +45,14 @@ export const Features = () => {
                     containerClassName=""
                 >
                     <div className="flex-1 ">
-                        <h1 className="text-[#D50000] font-bold text-3xl m-3">
-                            Explore Films Based on Your Story Preferences!
-                        </h1>
-                        <p className="text-white truncate  md:overflow-visible md:text-wrap">
-                            Step into the director&apos;s chair and shape your movie-watching experience like never before. With our personalized recommendation system, you can describe your ideal plot or story elements, and we&apos;ll handpick a selection of films that match your narrative preferences. Whether you crave epic adventures in distant realms, heartfelt romances that tug at the heartstrings, or gripping mysteries that keep you on the edge of your seat, our platform curates a diverse array of movies tailored to your storytelling desires. Let your imagination run wild as we guide you to cinematic masterpieces that resonate with your unique vision.
-                        </p>
+                        <Link href='/movies/fav-plots'>
+                            <h1 className="text-[#D50000] font-bold text-3xl m-3">
+                                Explore Films Based on Your Story Preferences!
+                            </h1>
+                            <p className="text-white truncate  md:overflow-visible md:text-wrap">
+                                Step into the director&apos;s chair and shape your movie-watching experience like never before. With our personalized recommendation system, you can describe your ideal plot or story elements, and we&apos;ll handpick a selection of films that match your narrative preferences. Whether you crave epic adventures in distant realms, heartfelt romances that tug at the heartstrings, or gripping mysteries that keep you on the edge of your seat, our platform curates a diverse array of movies tailored to your storytelling desires. Let your imagination run wild as we guide you to cinematic masterpieces that resonate with your unique vision.
+                            </p>
+                        </Link>
                     </div>
                     <div className="flex-1  ">
                         <Film className="h-full w-full text-red-600" />
