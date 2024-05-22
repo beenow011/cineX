@@ -37,7 +37,7 @@ export const PlotInput = () => {
                 What&apos;s on your mind today?
             </h2>
             <p className="text-cyan-600 text-xl    font-bold mb-10 sm:mb-20">
-                Describe the kind of movie plot you're in the mood for, and I'll find you a similar movie!
+                Describe the kind of movie plot you&apos;re in the mood for, and I&apos;ll find you a similar movie!
             </p>
 
             <PlaceholdersAndVanishInput
