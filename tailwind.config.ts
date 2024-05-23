@@ -18,6 +18,9 @@ const config = {
       },
     },
     extend: {
+        backgroundImage: {
+          'shanks': 'url("/public/shanks3.jpg")',
+        },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

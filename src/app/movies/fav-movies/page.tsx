@@ -18,7 +18,7 @@ export default function Page() {
                         Let us find your new favorite movie..!
                     </h1>
 
-                    <MovieInput />
+                    <MovieInput className="" />
 
                     <MovieRes />
                     <MovieFound />
