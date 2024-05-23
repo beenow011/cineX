@@ -10,10 +10,10 @@ import { ShanksCard } from "./ShanksCard";
 export const MovieSelect = () => {
     const { res, loading } = useContext(MovieContext)
     return (
-        <div className="flex-1 max-h-full relative">
-            <MovieInput className="items-start h-fit mb-3" />
+        <div className="flex-1 max-h-full  sticky">
             <ShanksCard />
-            <Image src={'/shanks3.jpg'} alt="shanks" height={576} width={1024} className="rounded-md hover:shadow-xl hover:shadow-cyan-400" />
+
+            <MovieInput className="items-start h-fit mb-3 w-3/4" />
         </div>
     )
 }

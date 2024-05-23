@@ -8,7 +8,7 @@ const Page = () => {
     return (
         <div className="mx-10">
             <MovieProvider>
-                <div className="flex">
+                <div className="flex flex-col md:flex-row justify-center items-center">
                     <MovieSelect />
                     <ChatBox />
 
