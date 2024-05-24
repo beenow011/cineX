@@ -20,7 +20,7 @@ export const ShanksCard = () => {
                             </div>
                             <div className="bg-slate-700/70 h-96 w-1/2 p-3 m-3 mt-16">
                                 <p className="text-white">
-                                    Shanks is a chatbot designed to answer all your movie-related questions. Whether you need a plot summary, an ending explained, or details about the cast and crew, Shanks has you covered. It offers concise yet thorough information, character insights, memorable quotes, and fun trivia. Shanks also aggregates reviews and ratings, providing a well-rounded view of a film’s reception. The name "Shanks" signifies its ability to cut through confusion and deliver precise answers, making it an essential tool for any movie enthusiast seeking quick and accurate information
+                                    Shanks is a chatbot designed to answer all your movie-related questions. Whether you need a plot summary, an ending explained, or details about the cast and crew, Shanks has you covered. It offers concise yet thorough information, character insights, memorable quotes, and fun trivia. Shanks also aggregates reviews and ratings, providing a well-rounded view of a film&apos;s reception. The name &quot;Shanks&quot; signifies its ability to cut through confusion and deliver precise answers, making it an essential tool for any movie enthusiast seeking quick and accurate information
                                 </p>
 
                             </div>
