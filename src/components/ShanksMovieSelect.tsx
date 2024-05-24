@@ -12,8 +12,9 @@ export const MovieSelect = () => {
     return (
         <div className="flex-1 max-h-full  sticky">
             <ShanksCard />
-
-            <MovieInput className="items-start h-fit mb-3 w-3/4" />
+            <div className="flex justify-center items-center w-full">
+                <MovieInput className="justify-center items-center h-fit mb-3 w-3/4 " />
+            </div>
         </div>
     )
 }
