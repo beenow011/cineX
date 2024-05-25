@@ -18,6 +18,9 @@ interface contextParams {
     loading2: boolean
     res: any
     res2: any
+    msg: string
+    addMsg: () => void
+    setMsg: Dispatch<SetStateAction<string>>
 
 }
 export const MovieContext = createContext<contextParams>({
@@ -30,7 +33,9 @@ export const MovieContext = createContext<contextParams>({
     searchMovieByName: () => { },
     loading: false,
     loading2: false,
-
+    msg: '',
+    setMsg: () => { },
+    addMsg: () => { },
     res: {},
     res2: {}
 });
@@ -43,7 +48,7 @@ export const MovieProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const [res, setRes] = useState<any>({});
     const [res2, setRes2] = useState<any>({});
     const [answer, setAnswer] = useState('')
-
+    const [msg, setMsg] = useState('')
     const { mutate: searchFromApiById, isLoading: isLoading1 } = trpc.retriveMoviesFromImdb.useMutation({
         onSuccess: (data) => {
             console.log(data)
@@ -164,11 +169,32 @@ export const MovieProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
     // console.log(similarMovieId)
 
+    const addMsg = async () => {
+        try {
 
+
+            if (Object.keys(res).length !== 0 && msg) {
+                const response = await fetch('/api/message', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        movieID: res.imdbID,
+                        movieName: res.Title,
+                        message: msg
+                    })
+                })
+                if (!response.ok) {
+                    throw new Error('Failed to send message')
+                }
+                console.log(response.body)
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    }
 
     return (
 
-        <MovieContext.Provider value={{ imdbId, setImdbId, searchSimilarMovies, movie, setMovie, searchMovieByID, loading, loading2, searchMovieByName, res, res2 }}>
+        <MovieContext.Provider value={{ imdbId, setImdbId, searchSimilarMovies, movie, setMovie, searchMovieByID, loading, loading2, addMsg, searchMovieByName, res, res2, msg, setMsg }}>
             {children}
 
         </MovieContext.Provider>

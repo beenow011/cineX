@@ -71,7 +71,7 @@ export const ShanksCard = () => {
                                         </h1> <div className=" bg-no-repeat  w-96 h-96 bg-[url('/shankslogo.jpg')]">
 
 
-                                            <div className="w-full h-full bg-slate-800/60 flex justify-center items-center">
+                                            <div className="w-full h-full bg-slate-800/90 flex justify-center items-center">
                                                 <img src={res.Poster} className="h-full hover:shadow-xl  hover:shadow-cyan-400" />
                                             </div>
                                         </div>

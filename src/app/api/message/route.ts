@@ -8,6 +8,7 @@ import { z } from "zod";
 
 const SendMessageValidator =  z.object({
     movieID : z.string(),
+    movieName: z.string(),
     message : z.string()
 })
 interface messageParams{
@@ -27,7 +28,7 @@ export const POST = async (req: NextRequest) => {
     if (!user) {
         return new Response('Unauthorized', { status: 401 })
     }
-    const { movieID, message } = SendMessageValidator.parse(body);
+    const { movieID , movieName , message } = SendMessageValidator.parse(body);
 
     await service.createMessage({
         text:message,
@@ -50,7 +51,7 @@ export const POST = async (req: NextRequest) => {
         const context = `PREVIOUS CONVERSATION:${formattedPrevMessages?.map((msg:formattedParams) => {
             if (msg.role === 'user') return `User:${msg.content}\n`;
             return `Assistant:${msg.content}\n`;
-        })}context:IMDBid-${movieID} USER INPUT:${message}`;
+        })}context:MovieName:${movieName} IMDBid-${movieID} USER INPUT:${message}`;
 
         const response = await openai.chat.completions.create({
             model: 'gpt-3.5-turbo',
@@ -69,6 +70,7 @@ export const POST = async (req: NextRequest) => {
         });
         const stream = OpenAIStream(response, {
             async onCompletion(completion) {
+                console.log('completion',completion)
                 await service.createMessage({
                     text:completion,
                      isUserMessage:false,
