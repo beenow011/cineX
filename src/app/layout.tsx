@@ -5,6 +5,7 @@ import { ClerkProvider } from '@clerk/nextjs'
 import Providers from "@/components/Providers";
 import { Header } from "@/components/Header";
 import { WavyBackground } from "@/components/ui/wavy-background";
+import { Toaster } from "@/components/ui/toaster";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -23,6 +24,10 @@ export default function RootLayout({
         <Providers>
           <body className={inter.className}>
             <WavyBackground className=" pb-40 justify-start items-start">
+
+
+
+              <Toaster />
               <Header />
               {children}</WavyBackground></body>
         </Providers>

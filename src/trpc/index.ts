@@ -90,7 +90,45 @@ export const appRouter = router({
             throw new TRPCError({code:'BAD_REQUEST'})
         }
     }
-    )
+    ),
+    getMessages: privateProcedure.input(z.object({
+        limit: z.number().min(1).max(100).nullish(),
+        cursor: z.string().nullish(),
+        movieID: z.string()
+    })).query(async ({ input, ctx }) => {
+        const { userId } = ctx;
+        const { movieID, cursor } = input;
+        const limit = input.limit ?? 10;
+        
+        try {
+            const messages = await service.retrievePrevMsg({
+                uId: userId,
+                movieID,
+                limit,
+                order: false,
+                lastVisible: cursor ? cursor : undefined,
+            });
+    
+            if (!messages || messages.length === 0) {
+                throw new TRPCError({ code: "NOT_FOUND" });
+            }
+    
+            let nextCursor : typeof cursor | undefined = undefined
+            if (messages.length > limit) {
+                const nextItem = messages.pop();
+                nextCursor = nextItem?.mID;
+            }
+    
+            return {
+                messages,
+                nextCursor
+            };
+        } catch (error) {
+            console.error("Error retrieving messages:", error);
+            throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+        }
+    })
+    
   // ...
 });
  

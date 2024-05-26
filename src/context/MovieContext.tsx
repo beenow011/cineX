@@ -2,8 +2,10 @@
 import { trpc } from "@/app/_trpc/client";
 import { useMutation } from "@tanstack/react-query";
 import { Console } from "console";
-import { Dispatch, FormEvent, ReactNode, SetStateAction, createContext, useCallback, useEffect, useState } from "react";
+import { Dispatch, FormEvent, ReactNode, SetStateAction, createContext, useCallback, useEffect, useRef, useState } from "react";
 import { useCompletion } from 'ai/react';
+import { toast } from "@/components/ui/use-toast";
+import service from "@/firebase/firestore";
 // import { json } from "stream/consumers";
 interface contextParams {
 
@@ -168,29 +170,112 @@ export const MovieProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         return similarMovieId
     }
     // console.log(similarMovieId)
-
-    const addMsg = async () => {
-        try {
-
-
-            if (Object.keys(res).length !== 0 && msg) {
+    const backupMessage = useRef('')
+    const [msgLoading, setMsgLoading] = useState(false)
+    const [messages, setMessages] = useState()
+    const utils = trpc.useContext()
+    const { mutate: msgProcess } = useMutation({
+        mutationFn: async ({ msg }: { msg: string }) => {
+            console.log('Mutation Function Triggered', res, msg);
+            if (Object.keys(res).length === 0 || !msg) {
+                throw new Error('Invalid input data');
+            }
+            try {
                 const response = await fetch('/api/message', {
                     method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
                     body: JSON.stringify({
                         movieID: res.imdbID,
                         movieName: res.Title,
                         message: msg
                     })
-                })
+                });
                 if (!response.ok) {
-                    throw new Error('Failed to send message')
+                    throw new Error('Failed to send message');
                 }
-                console.log(response.body)
+                return response.json(); // Assuming your endpoint returns JSON
+            } catch (err) {
+                console.error('Error in mutationFn:', err);
+                throw err; // Re-throw to let onError handle it
             }
-        } catch (err) {
-            console.log(err)
+        },
+        onMutate: async () => {
+            console.log('onMutate Triggered');
+            backupMessage.current = msg;
+            setMsg('');
+            await utils.getMessages.cancel();
+            const previousMessages = utils.getMessages.getInfiniteData();
+            utils.getMessages.setInfiniteData(
+                {
+                    movieID: res.imdbID,
+                    limit: 10
+                },
+                (data) => {
+                    if (!data) {
+                        return {
+                            pages: [],
+                            pageParams: [],
+                        };
+                    }
+                    // console.log('data:', data)
+                    return {
+                        ...data,
+                        pages: data.pages.map((page) => ({
+                            ...page,
+                            messages: page.messages,
+                        }))
+                    }
+                }
+            );
+
+            setMsgLoading(true);
+
+            return {
+                previousMessages: previousMessages?.pages.flatMap(page => page.messages) ?? []
+            };
+        },
+        onSuccess: async (data) => {
+            console.log('onSuccess Triggered');
+            setMsgLoading(false);
+            if (!data) {
+                return toast({
+                    title: 'There was a problem sending this message',
+                    description: 'Please refresh this page and try again',
+                    variant: 'destructive',
+                });
+            }
+            // console.log('Messages:', data);
+            // setMessages(data);
+        },
+        onError: (error, _, context) => {
+            console.error('onError Triggered:', error);
+            setMsg(backupMessage.current);
+            // Optionally reset to previous messages if needed
+            // utils.getMessages.setInfiniteData(
+            //     { movieID: res.imdbID, limit: 10 },
+            //     { pages: [{ messages: context.previousMessages }], pageParams: [] }
+            // );
+        },
+        onSettled: async () => {
+            console.log('onSettled Triggered');
+            setMsgLoading(false);
+            await utils.getMessages.invalidate({ movieID: res.imdbID });
         }
+    });
+
+    const addMsg = () => {
+        console.log('addMsg Triggered');
+        msgProcess({ msg });
     }
+
+    // Example of calling addMsg, e.g., on button click
+
+
+
+
+
 
     return (
 

@@ -23,6 +23,7 @@ export const Hero = () => {
 
             <MaxWidthWrapper className="mb-12 mt-28 md:mt-40 flex flex-col items-center justify-center text-center">
 
+
                 <HoverBorderGradient
                     containerClassName="rounded-full"
                     as="button"

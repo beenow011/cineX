@@ -3,6 +3,7 @@ import { openai } from "@/lib/openai";
 import { currentUser } from "@clerk/nextjs/server";
 import { OpenAIStream, StreamingTextResponse } from "ai";
 import { error } from "console";
+import { Timestamp } from "firebase/firestore";
 import { NextRequest } from "next/server";
 import { z } from "zod";
 
@@ -15,7 +16,9 @@ interface messageParams{
     text:string,
      isUserMessage:boolean,
         uId:string ,
-         movieID:string 
+        mID:string,
+         movieID:string ,
+         createdAt:Timestamp
 }
 interface formattedParams{
     role: string,
@@ -39,9 +42,12 @@ export const POST = async (req: NextRequest) => {
 
     try{
 
-        const prevMessages = await service.retrivePrevMsg({
+        const prevMessages = await service.retrievePrevMsg({
             uId:user.id,
-            movieID
+            movieID,
+            limit:6,
+            order:true,
+            lastVisible: undefined
         })
         const formattedPrevMessages =prevMessages? prevMessages.map((msg:messageParams) => ({
             role: msg.isUserMessage ? 'user' : 'assistant',
