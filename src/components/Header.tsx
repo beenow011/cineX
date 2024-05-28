@@ -12,13 +12,16 @@ export const Header = () => {
             </div>
             <div className="flex gap-6  m-6 flex-2">
                 <SignedOut>
-                    <Button >
-                        <p className="font-semibold">  <Link href={'/sign-in'}>Sign In</Link></p>
-                    </Button>
-                    <Button >
-                        <p className="font-semibold"><Link href={'/sign-up'}>Sign Up</Link></p>
-                    </Button>
-
+                    <Link href={'/sign-in'}>
+                        <Button >
+                            <p className="font-semibold">  Sign In</p>
+                        </Button>
+                    </Link>
+                    <Link href={'/sign-up'}>
+                        <Button >
+                            <p className="font-semibold">Sign Up</p>
+                        </Button>
+                    </Link>
                 </SignedOut>
                 <SignedIn>
                     {pathname !== '/dashboard' && <Button >

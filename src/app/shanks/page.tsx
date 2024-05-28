@@ -1,16 +1,21 @@
 import { ChatBox } from "@/components/ChatBox";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import { MovieSelect } from "@/components/ShanksMovieSelect";
+import { Skeleton } from "@/components/ui/skeleton";
 import { MovieContext, MovieProvider } from "@/context/MovieContext";
 import { ShanksProvider } from "@/context/ShanksContext";
+import { currentUser } from "@clerk/nextjs/server";
 
-const Page = () => {
+const Page = async () => {
+    const user = await currentUser()
+    console.log(user?.imageUrl)
     return (
         <div className="mx-10 h-[calc(100vh-96px)] ">
             <MovieProvider>
                 <div className="flex flex-col md:flex-row justify-center items-center overflow-hidden">
                     <MovieSelect />
-                    <ChatBox />
+
+                    <ChatBox img={user?.imageUrl} />
 
                 </div>
             </MovieProvider>

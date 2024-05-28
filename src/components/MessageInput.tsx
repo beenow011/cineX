@@ -1,12 +1,12 @@
 'use client';
-import { Send } from "lucide-react"
+import { Loader, Send } from "lucide-react"
 import { Button } from "./ui/button"
 import { Textarea } from "./ui/textarea"
 import { useContext, useRef } from "react"
 import { MovieContext } from "@/context/MovieContext"
 
 export const MessageInput = () => {
-    const { msg, setMsg, addMsg, setFlag } = useContext(MovieContext)
+    const { msg, setMsg, addMsg, setFlag, msgFlag } = useContext(MovieContext)
     const textAreaRef = useRef<HTMLTextAreaElement>(null)
     console.log(msg)
     return (
@@ -32,11 +32,19 @@ export const MessageInput = () => {
                                 className='resize-none  h-full pr-12 text-base py-[22px]   bg-black text-zinc-400 scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch'
                             />
 
-                            <Button aria-label="send message" className="absolute bottom-[20px] right-[8px]" onClick={() => {
+                            <Button aria-label="send message" className="absolute bottom-[20px] right-[8px]" disabled={msgFlag} onClick={() => {
                                 setFlag(true)
                                 addMsg()
                                 textAreaRef.current?.focus()
-                            }}> <Send className="h-4 w-4 text-white" /></Button>
+
+                            }}>
+                                {
+                                    msgFlag ? (
+                                        <Loader className="h-4 w-4 text-white animate-spin" />
+                                    ) : (
+                                        <Send className="h-4 w-4 text-white" />
+                                    )
+                                }</Button>
                         </div>
                     </div>
                 </div>
