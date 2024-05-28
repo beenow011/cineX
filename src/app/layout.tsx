@@ -23,7 +23,7 @@ export default function RootLayout({
       <html lang="en">
         <Providers>
           <body className={inter.className}>
-            <WavyBackground className=" pb-40 justify-start items-start">
+            <WavyBackground className=" justify-start items-start">
 
 
 

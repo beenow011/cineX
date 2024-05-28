@@ -3,14 +3,16 @@ import { openai } from "@/lib/openai";
 import { currentUser } from "@clerk/nextjs/server";
 import { OpenAIStream, StreamingTextResponse } from "ai";
 import { error } from "console";
-import { Timestamp } from "firebase/firestore";
+import { DocumentData, Timestamp } from "firebase/firestore";
 import { NextRequest } from "next/server";
 import { z } from "zod";
 
 const SendMessageValidator =  z.object({
     movieID : z.string(),
     movieName: z.string(),
-    message : z.string()
+    message : z.string(),
+    Year: z.string(),
+    Director:z.string()
 })
 interface messageParams{
     text:string,
@@ -31,7 +33,7 @@ export const POST = async (req: NextRequest) => {
     if (!user) {
         return new Response('Unauthorized', { status: 401 })
     }
-    const { movieID , movieName , message } = SendMessageValidator.parse(body);
+    const { movieID , movieName , Director, Year, message } = SendMessageValidator.parse(body);
 
     await service.createMessage({
         text:message,
@@ -49,15 +51,15 @@ export const POST = async (req: NextRequest) => {
             order:true,
             lastVisible: undefined
         })
-        const formattedPrevMessages =prevMessages? prevMessages.map((msg:messageParams) => ({
+        const formattedPrevMessages =prevMessages? prevMessages.map((msg:DocumentData) => ({
             role: msg.isUserMessage ? 'user' : 'assistant',
             content: msg.text,
         })):null;
 
-        const context = `PREVIOUS CONVERSATION:${formattedPrevMessages?.map((msg:formattedParams) => {
+        const context = `PREVIOUS CONVERSATION:${formattedPrevMessages?.map((msg:DocumentData) => {
             if (msg.role === 'user') return `User:${msg.content}\n`;
             return `Assistant:${msg.content}\n`;
-        })}context:MovieName:${movieName} IMDBid-${movieID} USER INPUT:${message}`;
+        })}context:MovieName:${movieName} IMDBid-${movieID} directed by ${Director} in year${Year} USER INPUT:${message}`;
 
         const response = await openai.chat.completions.create({
             model: 'gpt-3.5-turbo',

@@ -22,7 +22,9 @@ interface contextParams {
     res2: any
     msg: string
     addMsg: () => void
+    msgFlag: boolean
     setMsg: Dispatch<SetStateAction<string>>
+    setFlag: Dispatch<SetStateAction<boolean>>
 
 }
 export const MovieContext = createContext<contextParams>({
@@ -35,16 +37,18 @@ export const MovieContext = createContext<contextParams>({
     searchMovieByName: () => { },
     loading: false,
     loading2: false,
+    msgFlag: false,
     msg: '',
     setMsg: () => { },
     addMsg: () => { },
     res: {},
-    res2: {}
+    res2: {},
+    setFlag: () => { }
 });
 
 export const MovieProvider: React.FC<{ children: React.ReactNode }> = ({ children }: { children: ReactNode }) => {
     const [imdbId, setImdbId] = useState<string>('');
-    const [flag, setFlag] = useState<number>(0);
+    const [flag, setFlag] = useState<boolean>(false);
     const [movie, setMovie] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
     const [res, setRes] = useState<any>({});
@@ -176,6 +180,7 @@ export const MovieProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const utils = trpc.useContext()
     const { mutate: msgProcess } = useMutation({
         mutationFn: async ({ msg }: { msg: string }) => {
+
             console.log('Mutation Function Triggered', res, msg);
             if (Object.keys(res).length === 0 || !msg) {
                 throw new Error('Invalid input data');
@@ -189,6 +194,8 @@ export const MovieProvider: React.FC<{ children: React.ReactNode }> = ({ childre
                     body: JSON.stringify({
                         movieID: res.imdbID,
                         movieName: res.Title,
+                        Director: res.Director,
+                        Year: res.Year,
                         message: msg
                     })
                 });
@@ -204,7 +211,6 @@ export const MovieProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         onMutate: async () => {
             console.log('onMutate Triggered');
             backupMessage.current = msg;
-            setMsg('');
             await utils.getMessages.cancel();
             const previousMessages = utils.getMessages.getInfiniteData();
             utils.getMessages.setInfiniteData(
@@ -239,6 +245,7 @@ export const MovieProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         onSuccess: async (data) => {
             console.log('onSuccess Triggered');
             setMsgLoading(false);
+            setMsg('')
             if (!data) {
                 return toast({
                     title: 'There was a problem sending this message',
@@ -260,6 +267,7 @@ export const MovieProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         },
         onSettled: async () => {
             console.log('onSettled Triggered');
+
             setMsgLoading(false);
             await utils.getMessages.invalidate({ movieID: res.imdbID });
         }
@@ -267,7 +275,9 @@ export const MovieProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
     const addMsg = () => {
         console.log('addMsg Triggered');
+
         msgProcess({ msg });
+
     }
 
     // Example of calling addMsg, e.g., on button click
@@ -279,7 +289,7 @@ export const MovieProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
     return (
 
-        <MovieContext.Provider value={{ imdbId, setImdbId, searchSimilarMovies, movie, setMovie, searchMovieByID, loading, loading2, addMsg, searchMovieByName, res, res2, msg, setMsg }}>
+        <MovieContext.Provider value={{ imdbId, setImdbId, searchSimilarMovies, movie, setMovie, msgFlag: flag, searchMovieByID, loading, loading2, addMsg, searchMovieByName, res, res2, msg, setMsg, setFlag }}>
             {children}
 
         </MovieContext.Provider>

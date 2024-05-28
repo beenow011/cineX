@@ -21,7 +21,7 @@ export const GET=async(req: NextRequest , res:NextApiResponse)=>{
 
     try{
         const response = await openai.chat.completions.create({
-            model: 'gpt-3.5-turbo', // Using Davinci model for chat completions
+            model: 'gpt-3.5-turbo', // Using Davinci model for chat completion
             temperature: 0.1, // Adjust the temperature as needed
             stream: true,
             messages: [

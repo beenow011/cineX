@@ -18,6 +18,7 @@ const config = {
       },
     },
     extend: {
+      
         backgroundImage: {
           'shanks': 'url("/public/shankslogo.jpg")',
         },

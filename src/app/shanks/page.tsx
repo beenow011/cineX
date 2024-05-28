@@ -6,9 +6,9 @@ import { ShanksProvider } from "@/context/ShanksContext";
 
 const Page = () => {
     return (
-        <div className="mx-10">
+        <div className="mx-10 h-[calc(100vh-96px)] ">
             <MovieProvider>
-                <div className="flex flex-col md:flex-row justify-center items-center">
+                <div className="flex flex-col md:flex-row justify-center items-center overflow-hidden">
                     <MovieSelect />
                     <ChatBox />
 

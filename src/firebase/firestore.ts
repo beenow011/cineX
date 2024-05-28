@@ -79,34 +79,37 @@ export class Services {
 
     async retrievePrevMsg({ uId, movieID, limit: limit1, order, lastVisible }:PrevMsgParams) {
         try {
-          let movieQuery = query(
-            collection(this.db, "movies"),
+          
+          let baseQuery = query(
+            collection(this.db, "messages"),
             where("movieID", "==", movieID),
-            
-            // Adjust limit for pagination purposes
+            where("uId", "==", uId),
+            orderBy("createdAt", order ? 'asc' : 'desc'),
+            limit(limit1 + 1) // Adjust limit for pagination purposes
           );
+          
       
         //   if (lastVisible) {
         //     movieQuery = query(movieQuery, startAfter(lastVisible));
         //   }
       
-          console.log('Executing query with conditions:', {
-            movieID,
-            uId,
-            order,
-            limit: limit1 + 1,
-            lastVisible
-          });
+          // console.log('Executing query with conditions:', {
+          //   movieID,
+          //   uId,
+          //   order,
+          //   limit: limit1 + 1,
+          //   lastVisible
+          // });
       
-          const querySnapshot = await getDocs(movieQuery);
-          console.log('Query snapshot:', querySnapshot);
+          const querySnapshot = await getDocs(baseQuery);
+          // console.log('Query snapshot:', querySnapshot);
       
           if (!querySnapshot.empty) {
             const docs = querySnapshot.docs.map(doc => doc.data());
-            console.log('Retrieved documents:', docs);
+            // console.log('Retrieved documents:', docs);
             const userDoc = querySnapshot.docs[0];
-            console.log(userDoc.data());
-            return userDoc.data();
+            // console.log(userDoc.data());
+            return docs;
           } else {
             console.log('No documents found');
             return null;

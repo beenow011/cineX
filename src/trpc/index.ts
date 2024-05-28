@@ -112,6 +112,7 @@ export const appRouter = router({
             if (!messages || messages.length === 0) {
                 throw new TRPCError({ code: "NOT_FOUND" });
             }
+            // console.log(messages)
     
             let nextCursor : typeof cursor | undefined = undefined
             if (messages.length > limit) {
