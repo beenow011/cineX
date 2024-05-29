@@ -267,7 +267,7 @@ export const MovieProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         },
         onSettled: async () => {
             console.log('onSettled Triggered');
-
+            setMsg('')
             setMsgLoading(false);
             await utils.getMessages.invalidate({ movieID: res.imdbID });
         }

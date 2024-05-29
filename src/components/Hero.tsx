@@ -29,7 +29,7 @@ export const Hero = () => {
                     as="button"
                     className="dark:bg-black bg-black text-white dark:text-white flex items-center space-x-2"
                 >
-                    CineX
+                    CineVerse
                 </HoverBorderGradient>
                 <h1 className="max-w-4xl mt-6 text-5xl font-bold md:text-6xl lg:text-7xl text-white"> Discover Your Next   <span className="text-[#72cfcf]"> Favorite Film </span>with Personalized Recommendations!</h1>
                 <p className="mt-5 max-w-prose text-slate-300 sm:text-lg">Welcome to our world of cinematic exploration. We believe that every film holds a unique story, waiting to captivate and inspire. With our personalized recommendation system, powered by your <span className="text-cyan-400">favorite movies </span> , we&apos;re here to guide you to your next unforgettable cinematic experience</p>

@@ -1,7 +1,7 @@
 'use client';
 import Image from "next/image"
-import { MovieInput } from "./MovieInput"
-import { MovieCard } from "./MovieCard"
+import { MovieInput } from "../MovieInput"
+import { MovieCard } from "../MovieCard"
 import { useContext } from "react"
 import { ShanksContext } from "@/context/ShanksContext"
 import { MovieContext } from "@/context/MovieContext";

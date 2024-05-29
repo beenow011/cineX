@@ -7,7 +7,7 @@ import { useContext, useEffect, useState } from "react";
 import { Msg } from "./Msg";
 import { Loader } from "lucide-react";
 import Image from "next/image";
-import { Skeleton } from "./ui/skeleton";
+import { Skeleton } from "../ui/skeleton";
 
 export const Messages = ({ movieID, img }: { movieID: string, img: string | undefined }) => {
 
@@ -57,7 +57,7 @@ export const Messages = ({ movieID, img }: { movieID: string, img: string | unde
 
         }
     }, [isFetched, data]);
-    console.log(isLoading)
+
     useEffect(() => {
         if (msg?.length > 0 && flag) {
             const newMessage: Message = {
@@ -78,16 +78,17 @@ export const Messages = ({ movieID, img }: { movieID: string, img: string | unde
     return (
 
 
-        <div className="flex flex-col-reverse  gap-4  h-[calc(100vh-198px)] overflow-scroll p-3
+        <div className="flex flex-col-reverse pb-24 md:pb-7 gap-4 h-[100vh]  md:h-[calc(100vh-198px)] overflow-scroll p-3
     ">
 
 
 
 
             {
-                flag && (
-                    <div className="flex items-center space-x-4">
-                        <Skeleton className="h-12 w-12 rounded-full" />
+                isLoading || flag && (
+                    <div className="flex items-center space-x-4 my-2">
+
+                        <Image priority src={'/shanks1.jpg'} alt="shanks" quality={100} width={276} height={275} className="h-8 w-8 rounded-full mb-auto" />
                         <div className="space-y-2">
                             <Skeleton className="h-4 w-[250px]" />
                             <Skeleton className="h-4 w-[200px]" />
