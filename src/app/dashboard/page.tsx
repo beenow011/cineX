@@ -1,9 +1,12 @@
+import Dashboard from "@/components/Dashboard";
 import { Features } from "@/components/FeatureList";
+import { currentUser } from "@clerk/nextjs/server";
 
-export default function Page() {
+export default async function Page() {
+    const user = await currentUser()
     return (
         <div>
-            <Features />
+            <Dashboard name={user?.username} />
         </div>
     )
 }
