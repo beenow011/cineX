@@ -48,12 +48,15 @@ export const Messages = ({ movieID, img }: { movieID: string, img: string | unde
     }, [movieID])
     useEffect(() => {
         if (isFetched && data) {
+
+
             const typedData: PrevMsgParams = {
                 messages: data.messages as Message[],
                 nextCursor: data.nextCursor
             };
             setFlag(false)
             setMessages(typedData);
+
 
         }
     }, [isFetched, data]);
@@ -102,14 +105,14 @@ export const Messages = ({ movieID, img }: { movieID: string, img: string | unde
 
             {
                 isFetched ? (
-                    messages?.messages.map((msg) => (
+                    messages?.messages.map((msg, i) => (
                         <div key={msg.mID} className={` w-full gap-2 flex ${msg.isUserMessage ? 'justify-end items-end' : 'justify-start items-start'}`}>
                             {
                                 !msg.isUserMessage && (
                                     <Image priority src={'/shanks1.jpg'} alt="shanks" quality={100} width={276} height={275} className="h-8 w-8 rounded-full mb-auto" />
                                 )
                             }
-                            <Msg text={msg.text} createdAt={msg.createdAt} isUserMessage={msg.isUserMessage} /> {msg.isUserMessage && (
+                            <Msg text={msg.text} createdAt={msg.createdAt} isUserMessage={msg.isUserMessage} index={i} /> {msg.isUserMessage && (
                                 <img src={img} alt="profile pic" className="h-8 w-8 rounded-full mb-auto" />
                             )}
                         </div>
