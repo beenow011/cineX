@@ -36,6 +36,7 @@ export const Messages = ({ movieID, img }: { movieID: string, img: string | unde
         nextCursor: string | null | undefined
     };
     const [messages, setMessages] = useState<PrevMsgParams | undefined>()
+    const [typeWritter, setTypeWritter] = useState(false)
     const { msg, msgFlag: flag, setFlag } = useContext(MovieContext)
     const { data, isLoading, isFetched } = trpc.getMessages.useQuery(
         {
@@ -45,6 +46,7 @@ export const Messages = ({ movieID, img }: { movieID: string, img: string | unde
     )
     useEffect(() => {
         setMessages(undefined)
+        setTypeWritter(false)
     }, [movieID])
     useEffect(() => {
         if (isFetched && data) {
@@ -60,6 +62,7 @@ export const Messages = ({ movieID, img }: { movieID: string, img: string | unde
 
         }
     }, [isFetched, data]);
+
 
     useEffect(() => {
         if (msg?.length > 0 && flag) {
@@ -77,6 +80,12 @@ export const Messages = ({ movieID, img }: { movieID: string, img: string | unde
             });
         }
     }, [msg, flag])
+
+    useEffect(() => {
+        if (flag) {
+            setTypeWritter(true)
+        }
+    }, [flag])
 
     return (
 
@@ -112,7 +121,7 @@ export const Messages = ({ movieID, img }: { movieID: string, img: string | unde
                                     <Image priority src={'/shanks1.jpg'} alt="shanks" quality={100} width={276} height={275} className="h-8 w-8 rounded-full mb-auto" />
                                 )
                             }
-                            <Msg text={msg.text} createdAt={msg.createdAt} isUserMessage={msg.isUserMessage} index={i} /> {msg.isUserMessage && (
+                            <Msg text={msg.text} createdAt={msg.createdAt} isUserMessage={msg.isUserMessage} index={i} typeWritter={typeWritter} /> {msg.isUserMessage && (
                                 <img src={img} alt="profile pic" className="h-8 w-8 rounded-full mb-auto" />
                             )}
                         </div>
