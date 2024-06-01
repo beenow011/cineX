@@ -6,7 +6,7 @@ import InputInfo from "./InputInfo"
 import { MovieContext } from "@/context/MovieContext";
 
 
-function CreateRoom() {
+function CreateRoom({ user }: { user: string | undefined }) {
     const { res, loading } = useContext(MovieContext)
     return (
         <div className="bg-zinc-900 p-4">
@@ -16,7 +16,7 @@ function CreateRoom() {
             </h1>
             <MovieInput className="" />
             <MovieCard res={res} loading={loading} flag={false} className="bg-black" />
-            <InputInfo />
+            <InputInfo user={user} />
         </div>
     )
 }

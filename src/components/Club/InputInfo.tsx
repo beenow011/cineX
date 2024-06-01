@@ -19,6 +19,8 @@ import { MovieContext } from "@/context/MovieContext"
 import { Film } from "lucide-react"
 import { Textarea } from "../ui/textarea"
 import { CldUploadButton } from 'next-cloudinary';
+import service from "@/firebase/firestore"
+import { useRouter } from "next/navigation"
 
 const formSchema = z.object({
     clubName: z.string().min(2, {
@@ -31,11 +33,14 @@ const formSchema = z.object({
     banner: z.string().min(1)
 
 })
-function InputInfo() {
+function InputInfo({ user }: { user: string | undefined }) {
+    const navigate = useRouter()
     const [error, setError] = useState('')
     const [movie, setMovie] = useState('')
     const [club, setClub] = useState('')
     const [userInput, setUserInput] = useState("");
+    const [icon, setIcon] = useState('')
+    const [banner, setBanner] = useState('')
     const { res } = useContext(MovieContext)
     useEffect(() => {
         setError('')
@@ -54,14 +59,39 @@ function InputInfo() {
             clubName: movie,
         },
     })
+    const { setValue } = form
+
+    useEffect(() => {
+        if (icon.length > 0) {
+            setValue('icon', icon)
+        }
+
+    }, [icon])
+    useEffect(() => {
+        if (banner.length > 0) {
+            setValue('banner', banner)
+        }
+    }, [banner])
     function onSubmit(values: z.infer<typeof formSchema>) {
         // Do something with the form values.
         // ✅ This will be type-safe and validated.
-
+        try {
+            service.createRoom({ movieID: movie, roomName: values.clubName, icon: values.icon, banner: values.banner, description: values.description, createdBy: user! }).then((res) => {
+                console.log(res)
+                navigate.push(`club/${res?.id}`)
+            })
+        } catch (error) {
+            console.log(error)
+        }
         console.log('1', values)
     }
     const handleUpload = useCallback(async (result: any) => {
         console.log(result);
+        setIcon(result.info.url)
+    }, []);
+    const handleBannerUpload = useCallback(async (result: any) => {
+        console.log(result);
+        setBanner(result.info.url)
     }, []);
     return (
         <div className=" mt-5">
@@ -124,38 +154,42 @@ function InputInfo() {
                             </FormItem>
                         )}
                     />
-                    <FormField
-                        control={form.control}
-                        name="description"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel className="text-white">icon</FormLabel>
-                                <FormControl className="ml-2">
+                    <div className="flex flex-col md:flex-row">
+                        <span className="text-white mr-2">Icon</span>
+                        <CldUploadButton
+                            options={{
+                                maxFiles: 1,
+                                resourceType: 'image',
+                                clientAllowedFormats: ['jpg', 'jpeg', 'png', 'webp'], // Accept only photos
+                                multiple: false
+                            }}
+                            onUpload={handleUpload}
 
-                                    <CldUploadButton
-                                        options={{
-                                            maxFiles: 1,
-                                            resourceType: 'image',
-                                            clientAllowedFormats: ['jpg', 'jpeg', 'png', 'webp'], // Accept only photos
-                                            multiple: false
-                                        }}
-                                        onUpload={handleUpload}
+                            className={buttonVariants({ variant: "secondary" })}
+                            uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
 
-                                        className={buttonVariants({ variant: "secondary" })}
-                                        uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
-
-                                    ></CldUploadButton>
-                                </FormControl>
-                                <FormDescription className="text-white">
-                                    Icon is publically visible.
-                                </FormDescription>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+                        > <p className="truncate w-36">{icon ? icon : 'Select a image for icon'}</p></CldUploadButton>
 
 
+                        <span className="text-white mx-2">Banner</span>
+                        <CldUploadButton
+                            options={{
+                                maxFiles: 1,
+                                resourceType: 'image',
+                                clientAllowedFormats: ['jpg', 'jpeg', 'png', 'webp'], // Accept only photos
+                                multiple: false
+                            }}
+                            onUpload={handleBannerUpload}
 
+
+                            className={buttonVariants({ variant: "secondary" })}
+                            uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
+
+                        > <p className="truncate w-36">{banner ? banner : 'Select a image for banner'}</p> </CldUploadButton>
+
+
+
+                    </div>
                     <Button type="submit">Submit</Button>
                 </form>
             </Form>

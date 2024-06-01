@@ -30,9 +30,10 @@ interface roomParams{
   roomName:string,
   icon:string,
   banner:string,
-  createdBy:string,
-  description:string
+  description:string,
+  createdBy: string
 }
+
 export class Services {
     app;
     db;
@@ -128,14 +129,15 @@ export class Services {
         }
       }
 
-      async createRoom({movieID,roomName,icon,banner,createdBy,description}:roomParams){
+      async createRoom({movieID,roomName,icon,banner,description,createdBy}:roomParams){
         try{
+         
           if(roomName.length==0){
             throw Error('Room name not found!')
           }
           let members = [createdBy]
           const docRef = await addDoc(collection(this.db, "room"),{
-            movieID,roomName,icon,banner,createdBy,createdAt:Timestamp,users:members,description
+            movieID,roomName,icon,banner,createdBy,createdAt:Timestamp.fromDate(new Date()),users:members,description
           })
          
           
