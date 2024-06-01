@@ -4,15 +4,17 @@ import { MovieInfo } from "./MovieInfo"
 import { Button } from "./ui/button"
 import { useContext } from "react"
 import { MovieContext } from "@/context/MovieContext"
+import { cn } from "@/lib/utils";
 
 interface params {
     res: any
     loading: boolean
     flag: boolean
+    className: string
 }
 
 
-export const MovieCard = ({ res, loading, flag }: params) => {
+export const MovieCard = ({ res, loading, flag, className }: params) => {
 
     const { searchSimilarMovies } = useContext(MovieContext)
     return (
@@ -20,7 +22,7 @@ export const MovieCard = ({ res, loading, flag }: params) => {
 
         <div>
 
-            <div className="mx-2.5 w-full  bg-gradient-to-r from-black to-slate-700 mt-5 p-3 rounded-md shadow-inner  shadow-white/30">
+            <div className={cn("mx-2.5 w-full  bg-zinc-900 mt-5 p-3 rounded-md   shadow-white/30", className)}>
                 {
 
                     loading ? (

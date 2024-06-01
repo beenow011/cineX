@@ -42,7 +42,7 @@ export const PlotResult = () => {
                 )
             }
             {Object.keys(res).length !== 0 && (
-                <MovieCard res={res} loading={false} flag={false} />
+                <MovieCard res={res} loading={false} flag={false} className="" />
             )
             }
         </div>

@@ -79,6 +79,6 @@ export const MovieFound = () => {
         //     </div>
 
         // </div>
-        <MovieCard res={res2} loading={loading2} flag={false} />
+        <MovieCard res={res2} loading={loading2} flag={false} className="" />
     )
 }

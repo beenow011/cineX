@@ -25,6 +25,14 @@ interface messageParams{
          uId:string ,
           movieID:string 
 }
+interface roomParams{
+  movieID:string,
+  roomName:string,
+  icon:string,
+  banner:string,
+  createdBy:string,
+  description:string
+}
 export class Services {
     app;
     db;
@@ -116,6 +124,23 @@ export class Services {
           }
         } catch (err) {
           console.error('Error retrieving messages:', err);
+          throw err;
+        }
+      }
+
+      async createRoom({movieID,roomName,icon,banner,createdBy,description}:roomParams){
+        try{
+          if(roomName.length==0){
+            throw Error('Room name not found!')
+          }
+          let members = [createdBy]
+          const docRef = await addDoc(collection(this.db, "room"),{
+            movieID,roomName,icon,banner,createdBy,createdAt:Timestamp,users:members,description
+          })
+         
+          
+          return docRef; 
+        }catch(err){
           throw err;
         }
       }

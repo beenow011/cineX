@@ -71,6 +71,6 @@ export const MovieRes = () => {
 
         //     </div>
         // </div>
-        <MovieCard res={res} loading={loading} flag={true} />
+        <MovieCard res={res} loading={loading} flag={true} className="" />
     )
 }

@@ -3,6 +3,7 @@ import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from "@cl
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { usePathname } from "next/navigation";
+import { PlusCircle } from "lucide-react";
 export const Header = () => {
     const pathname = usePathname()
     return (
@@ -24,6 +25,9 @@ export const Header = () => {
                     </Link>
                 </SignedOut>
                 <SignedIn>
+                    {
+                        pathname !== '/create-club' && <Link href={'/create-club'}><Button><PlusCircle className="h-7 w-7 bg-red-600" /> <p className="font-semibold ml-2">Room</p></Button></Link>
+                    }
                     {pathname !== '/dashboard' && <Button >
                         <p className="font-semibold"><Link href={'/dashboard'}>Dashboard</Link></p>
                     </Button>}
