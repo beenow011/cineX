@@ -131,9 +131,19 @@ export class Services {
 
       async createRoom({movieID,roomName,icon,banner,description,createdBy}:roomParams){
         try{
-         
+          const q = query(collection(this.db, "room"), where("roomName", "==", roomName));
+            const querySnapshot = await getDocs(q);
+            console.log(querySnapshot)
+            
+          
+            if (!querySnapshot.empty) {
+              // User already exists, return their details
+              console.log(true)
+              const userDoc = querySnapshot.docs[0];
+              throw Error('Club Name already exists.')
+          } else {
           if(roomName.length==0){
-            throw Error('Room name not found!')
+            throw new Error('Room name not found!')
           }
           let members = [createdBy]
           const docRef = await addDoc(collection(this.db, "room"),{
@@ -142,7 +152,9 @@ export class Services {
          
           
           return docRef; 
+        }
         }catch(err){
+          console.error('Error retrieving messages:', err);
           throw err;
         }
       }

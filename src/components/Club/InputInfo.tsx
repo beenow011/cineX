@@ -21,6 +21,7 @@ import { Textarea } from "../ui/textarea"
 import { CldUploadButton } from 'next-cloudinary';
 import service from "@/firebase/firestore"
 import { useRouter } from "next/navigation"
+import { toast } from "../ui/use-toast"
 
 const formSchema = z.object({
     clubName: z.string().min(2, {
@@ -59,7 +60,9 @@ function InputInfo({ user }: { user: string | undefined }) {
             clubName: movie,
         },
     })
-    const { setValue } = form
+    const { setValue, getValues } = form
+
+    console.log(getValues('clubName'), getValues('description'))
 
     useEffect(() => {
         if (icon.length > 0) {
@@ -72,16 +75,33 @@ function InputInfo({ user }: { user: string | undefined }) {
             setValue('banner', banner)
         }
     }, [banner])
+    // useEffect(() => {
+    //     if (userInput.length > 0 && movie.length > 0) {
+    //         setValue('clubName', movie + userInput)
+    //     }
+    // }, [userInput])
     function onSubmit(values: z.infer<typeof formSchema>) {
         // Do something with the form values.
         // ✅ This will be type-safe and validated.
-        try {
-            service.createRoom({ movieID: movie, roomName: values.clubName, icon: values.icon, banner: values.banner, description: values.description, createdBy: user! }).then((res) => {
+        if (movie) {
+            console.log(1)
+            service.createRoom({ movieID: movie.slice(0, movie.length - 1), roomName: movie + values.clubName, icon: values.icon, banner: values.banner, description: values.description, createdBy: user! }).then((res) => {
                 console.log(res)
                 navigate.push(`club/${res?.id}`)
+            }).catch(err => {
+                console.log(err)
+                toast({
+                    title: 'Club name is already taken.',
+                    description: 'Club name should be unique',
+                    variant: 'destructive',
+                });
             })
-        } catch (error) {
-            console.log(error)
+        } else {
+            toast({
+                title: 'Movie is not selected',
+                description: 'Select movie name before creating your club.',
+                variant: 'destructive',
+            });
         }
         console.log('1', values)
     }
@@ -106,7 +126,7 @@ function InputInfo({ user }: { user: string | undefined }) {
                                 <FormLabel className="text-white">Club Name</FormLabel>
                                 <FormControl>
                                     <div className="flex items-center space-x-2">
-                                        <span className="text-white bg-gray-700 p-2 rounded-l-md">{movie.length > 0 ? movie : <Film className="h-6 w-6 text-red-600" />}</span>
+                                        <span className="text-white bg-gray-700 p-2 rounded-l-md">{movie ? movie : (<Film className="h-6 w-6 text-red-600" />)}</span>
                                         <Input
                                             placeholder="Your Club's name"
                                             {...field}
@@ -127,7 +147,6 @@ function InputInfo({ user }: { user: string | undefined }) {
                                 </FormControl>
                                 <FormDescription className="text-white">
                                     Club name should be unique.
-                                    you&apos;r club name is <span className="font-bold">{movie}</span>{userInput}
                                 </FormDescription>
                                 <FormMessage />
                             </FormItem>
