@@ -26,7 +26,7 @@ import { toast } from "../ui/use-toast"
 const formSchema = z.object({
     clubName: z.string().min(2, {
         message: "Club name must be at least 2 characters.",
-    }).max(15).regex(/^[a-zA-Z0-9]+$/, {
+    }).max(25).regex(/^[a-zA-Z0-9]+$/, {
         message: "Club name must be alphanumeric.",
     }),
     description: z.string().min(1).max(100),

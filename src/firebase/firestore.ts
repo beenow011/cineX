@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 // import { getDatabase , ref, set, onValue  } from "firebase/database";
-import { Timestamp, getFirestore, orderBy, startAfter } from "firebase/firestore";
+import { Timestamp, getDoc, getFirestore, orderBy, startAfter } from "firebase/firestore";
 import { collection, addDoc, getDocs, doc, updateDoc , query, where ,limit } from "firebase/firestore";
 
 import conf from "./config";
@@ -129,7 +129,7 @@ export class Services {
         }
       }
 
-      async createRoom({movieID,roomName,icon,banner,description,createdBy}:roomParams){
+    async createRoom({movieID,roomName,icon,banner,description,createdBy}:roomParams){
         try{
           const q = query(collection(this.db, "room"), where("roomName", "==", roomName));
             const querySnapshot = await getDocs(q);
@@ -158,6 +158,22 @@ export class Services {
           throw err;
         }
       }
+
+    async retrieveRoom({roomID}:{roomID:string}){
+      try{
+        const docRef = doc(collection(this.db, 'room'), roomID);
+        const docSnap = await getDoc(docRef);
+
+        if (!docSnap.exists()) {
+          throw new Error('Room not found');
+        }
+
+        return docSnap.data();
+
+      }catch(err){
+        throw err
+      }
+    }
       
       
       
