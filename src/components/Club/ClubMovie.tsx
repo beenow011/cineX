@@ -45,7 +45,7 @@ function ClubMovie({ movieID }: ClubMovieProps) {
             ) : (
                 <div className='w-full flex flex-col justify-center items-center'>
                     <Avatar className="h-16 w-16 md:h-48 md:w-48 ring-2 ring-cyan-600 ">
-                        <AvatarImage src={res?.Poster} alt="icon" />
+                        <AvatarImage src={res?.Poster} alt="icon" className='object-contain' />
                         <AvatarFallback>{res?.Title}</AvatarFallback>
                     </Avatar>
                     <h1 className='text-lg font-semibold text-red-600'>

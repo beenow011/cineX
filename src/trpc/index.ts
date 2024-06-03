@@ -25,8 +25,8 @@ export const appRouter = router({
     }),
     retriveMoviesFromImdb : privateProcedure.input(z.object({imdbId: z.string()})).mutation(async({input , ctx})=>{
         const {imdbId} = input
-        console.log(imdbId)
-        console.log("3",imdbId)
+        // console.log(imdbId)
+        // console.log("3",imdbId)
         const url = `http://www.omdbapi.com/?apikey=e12df4ca&i=${imdbId}`;
         try{
             const res = await fetch(url);
