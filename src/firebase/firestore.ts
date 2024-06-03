@@ -183,8 +183,14 @@ export class Services {
         );
         const querySnapshot = await getDocs(baseQuery);
         if (!querySnapshot.empty) {
-          const docs = querySnapshot.docs.map(doc => doc.data());
-          // console.log('Retrieved documents:', docs);
+          console.log(querySnapshot)
+          const docs = querySnapshot.docs.map(doc => {
+            return {
+                id: doc.id,
+                ...doc.data()
+            };
+        });
+          console.log('Retrieved documents:', docs);
           const userDoc = querySnapshot.docs[0];
           // console.log(userDoc.data());
           return docs;
