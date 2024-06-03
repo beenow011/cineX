@@ -175,9 +175,27 @@ export class Services {
       }
     }
       
-      
-      
-
+    async getYourRooms({user}:{user:string}){
+      try{
+        let baseQuery = query(
+          collection(this.db, "room"),
+          where("createdBy", "==", user),
+        );
+        const querySnapshot = await getDocs(baseQuery);
+        if (!querySnapshot.empty) {
+          const docs = querySnapshot.docs.map(doc => doc.data());
+          // console.log('Retrieved documents:', docs);
+          const userDoc = querySnapshot.docs[0];
+          // console.log(userDoc.data());
+          return docs;
+        } else {
+          console.log('No documents found');
+          return null;
+        }
+      }catch(err){
+        throw err;
+      }
+    }
 }
 
 const service = new Services();

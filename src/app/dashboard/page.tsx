@@ -4,9 +4,10 @@ import { currentUser } from "@clerk/nextjs/server";
 
 export default async function Page() {
     const user = await currentUser()
+
     return (
         <div>
-            <Dashboard name={user?.username} />
+            <Dashboard name={user?.username} user={user?.id} />
         </div>
     )
 }
