@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 // import { getDatabase , ref, set, onValue  } from "firebase/database";
-import { Timestamp, getDoc, getFirestore, orderBy, startAfter } from "firebase/firestore";
+import { Timestamp, arrayRemove, arrayUnion, getDoc, getFirestore, orderBy, startAfter } from "firebase/firestore";
 import { collection, addDoc, getDocs, doc, updateDoc , query, where ,limit } from "firebase/firestore";
 
 import conf from "./config";
@@ -200,6 +200,28 @@ export class Services {
         }
       }catch(err){
         throw err;
+      }
+    }
+
+    async joinClub({userId , roomId}:{userId:string , roomId:string}){
+      try{
+        const userDocRef = doc(this.db, "room", roomId);
+            return await updateDoc(userDocRef, {
+                users: arrayUnion(userId)
+            });
+      }catch(err){
+        console.log(err)
+      }
+    }
+
+    async leaveCLub({userId , roomId}:{userId:string , roomId:string}){
+      try{
+        const userDocRef = doc(this.db, "room", roomId);
+        await updateDoc(userDocRef, {
+          users: arrayRemove(userId)
+      });
+      }catch(err){
+        console.log(err)
       }
     }
 }

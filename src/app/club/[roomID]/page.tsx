@@ -27,7 +27,7 @@ function Page() {
     return (
         <div>
             <MaxWidthWrapper className="px-0 mx-auto mt-5 max-w-7xl md:p-8">
-                <ClubPage club={club} />
+                <ClubPage club={club} roomId={roomID} />
             </MaxWidthWrapper>
         </div>
     )

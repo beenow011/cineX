@@ -1,3 +1,4 @@
+'use client';
 import { DocumentData } from "firebase/firestore"
 import { AspectRatio } from "../ui/aspect-ratio"
 import Image from "next/image"
@@ -5,10 +6,36 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import ClubPosts from "./ClubPosts"
 import ClubMovie from "./ClubMovie"
 import ClubButtons from "./ClubButtons"
+import { currentUser, getAuth } from "@clerk/nextjs/server"
+import { useContext, useEffect, useState } from "react";
+import { UserContext } from "@/context/AuthContext";
+import { trpc } from "@/app/_trpc/client";
+import service from "@/firebase/firestore";
 
 
-function ClubPage({ club }: { club: DocumentData | undefined }) {
+function ClubPage({ club, roomId }: { club: DocumentData | undefined, roomId: string }) {
     const strings = club?.roomName.split('/')
+    // const { userId } = useContext(UserContext)
+    const query = trpc.getUser.useQuery()
+    const [flag, setFlag] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const joinRoom = () => {
+        setLoading(true)
+        service.joinClub({ userId: query.data?.userId!, roomId }).then(res => console.log(res)).catch(err => console.log(err)).finally(() => setLoading(false))
+    }
+    const leaveRoom = () => {
+        setLoading(true)
+        service.leaveCLub({ userId: query.data?.userId!, roomId }).then(res => console.log(res)).catch(err => console.log(err)).finally(() => setLoading(false))
+    }
+    if (query.data) {
+
+        console.log('a', query.data.userId)
+    }
+    useEffect(() => {
+
+        club?.users?.includes(query.data?.userId) ? setFlag(true) : setFlag(false)
+    }, [query])
+
     return (
         <div>
             <AspectRatio ratio={4 / 1} className="bg-gradient-to-r from-black to-zinc-600">
@@ -50,12 +77,13 @@ function ClubPage({ club }: { club: DocumentData | undefined }) {
 
                     </p>
                 </div>
+
             </div>
 
 
             <div className="flex flex-col-reverse md:flex-row mt-3">
                 <div className="flex-1 p-3 ">
-                    <ClubButtons />
+                    <ClubButtons members={club?.users.length | 0} alreadyMember={flag} userId={query.data?.userId!} roomId={roomId} admin={club?.createdBy} join={joinRoom} leave={leaveRoom} loading={loading} />
                     <ClubPosts />
                 </div>
 

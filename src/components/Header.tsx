@@ -2,12 +2,13 @@
 import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { Button } from "./ui/button";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Menu, PlusCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 export const Header = () => {
     const [menu, setMenu] = useState(false)
     const pathname = usePathname()
+    const router = useRouter()
 
     useEffect(() => {
         setMenu(false)
@@ -20,20 +21,19 @@ export const Header = () => {
             </div>
             <div className="md:flex gap-6  m-6 flex-2 hidden ">
                 <SignedOut>
-                    <Link href={'/sign-in'}>
-                        <Button >
-                            <p className="md:font-semibold">  Sign In</p>
-                        </Button>
-                    </Link>
-                    <Link href={'/sign-up'}>
-                        <Button >
-                            <p className="md:font-semibold">Sign Up</p>
-                        </Button>
-                    </Link>
+
+                    <Button onClick={() => router.push('/sign-in')}>
+                        <p className="md:font-semibold">  Sign In</p>
+                    </Button>
+
+                    <Button onClick={() => router.push('/sign-up')}>
+                        <p className="md:font-semibold">Sign Up</p>
+                    </Button>
+
                 </SignedOut>
                 <SignedIn>
                     {
-                        pathname !== '/create-club' && <Link href={'/create-club'}><Button><PlusCircle className="h-7 w-7 bg-red-600" /> <p className="font-semibold ml-2">Room</p></Button></Link>
+                        pathname !== '/create-club' && <Button onClick={() => router.push('/create-club')}><PlusCircle className="h-7 w-7 bg-red-600" /> <p className="font-semibold ml-2">Room</p></Button>
                     }
                     {pathname !== '/dashboard' && <Button >
                         <p className="font-semibold"><Link href={'/dashboard'}>Dashboard</Link></p>
@@ -52,26 +52,25 @@ export const Header = () => {
                     menu && (
                         <div className="absolute flex flex-col gap-4 right-4 top-5 bg-white shadow-lg rounded-lg w-36 mt-2 p-4">
                             <SignedOut>
-                                <Link href={'/sign-in'}>
-                                    <Button className="w-full">
-                                        <p className="font-semibold">Sign In</p>
-                                    </Button>
-                                </Link>
-                                <Link href={'/sign-up'}>
-                                    <Button className="w-full">
-                                        <p className="font-semibold">Sign Up</p>
-                                    </Button>
-                                </Link>
+
+                                <Button className="w-full" onClick={() => router.push('/sign-in')}>
+                                    <p className="font-semibold">Sign In</p>
+                                </Button>
+
+                                <Button className="w-full" onClick={() => router.push('/sign-up')}>
+                                    <p className="font-semibold">Sign Up</p>
+                                </Button>
+
                             </SignedOut>
                             <SignedIn>
                                 {
                                     pathname !== '/create-club' && (
-                                        <Link href={'/create-club'}>
-                                            <Button className="w-full">
-                                                <PlusCircle className="h-7 w-7 bg-red-600" />
-                                                <p className="font-semibold ml-2">Room</p>
-                                            </Button>
-                                        </Link>
+
+                                        <Button className="w-full" onClick={() => router.push('/reate-club')}>
+                                            <PlusCircle className="h-7 w-7 bg-red-600" />
+                                            <p className="font-semibold ml-2">Room</p>
+                                        </Button>
+
                                     )
                                 }
                                 {

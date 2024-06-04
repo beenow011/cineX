@@ -6,6 +6,7 @@ import service from '@/firebase/firestore';
 import { OpenAIStream } from 'ai';
 import { openai } from '@/lib/openai';
 export const appRouter = router({
+    
     registerToFirestore: publicProcedure.mutation(async () => {
         const user = await currentUser();
         if (!user) {
@@ -22,6 +23,13 @@ export const appRouter = router({
         } catch (err) {
             throw new TRPCError({ code: 'BAD_REQUEST' });
         }
+    }),
+    getUser: privateProcedure.query(async({ctx})=>{
+        const { userId , user } = ctx;
+        if(!user){
+            throw new TRPCError({code:"UNAUTHORIZED"})
+        }
+        return {userId,userName:user.username,email:user.emailAddresses[0].emailAddress}
     }),
     retriveMoviesFromImdb : privateProcedure.input(z.object({imdbId: z.string()})).mutation(async({input , ctx})=>{
         const {imdbId} = input
