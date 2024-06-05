@@ -1,10 +1,11 @@
 'use client';
 import { Loader2, Plus, Share } from "lucide-react"
-import { Button } from "../ui/button"
+import { Button, buttonVariants } from "../ui/button"
 import service from "@/firebase/firestore"
-import { useState } from "react"
+import { useCallback, useState } from "react"
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import DialogComponent from "../DialogComponent";
+import { CldUploadButton } from "next-cloudinary";
 
 
 function ClubButtons({ members, alreadyMember, userId, roomId, admin, join, leave, loading }: { members: number, alreadyMember: boolean, userId: string, roomId: string, admin: string, join: () => void, leave: () => void, loading: boolean }) {
@@ -18,7 +19,10 @@ function ClubButtons({ members, alreadyMember, userId, roomId, admin, join, leav
     //     setLoading(true)
     //     service.leaveCLub({ userId, roomId }).then(res => console.log(res)).catch(err => console.log(err)).finally(() => setLoading(false))
     // }
-
+    const handleUpload = useCallback(async (result: any) => {
+        console.log(result);
+        // setIcon(result.info.url)
+    }, []);
     return (
         <div className="w-full bg-slate-700/50  rounded-lg flex justify-between gap-3 p-2">
             <div className="flex gap-3">
@@ -50,14 +54,15 @@ function ClubButtons({ members, alreadyMember, userId, roomId, admin, join, leav
                     )
                 }
 
-                <div className="p-2">
-                    <p className="text-red-600 font-bold">Members:    <span className="text-cyan-600">{members}</span></p>
+                <div className="p-2 flex">
+                    <p className="text-red-600  md:font-bold">Members:    <span className="text-cyan-600">{members}</span></p>
                 </div>
             </div>
             <div className="flex gap-2">
                 {/* <Button variant={'ghost'}>
                     <Plus className="h-6 w-6 text-cyan-600" /> <p className="text-cyan-600 antialiased font-semibold">Post</p>
                 </Button> */}
+
                 <Dialog>
                     <DialogTrigger asChild>
                         <Button variant="outline"><Plus className="h-6 w-6 text-cyan-600" /> <p className="text-cyan-600 antialiased font-semibold">Post</p></Button>

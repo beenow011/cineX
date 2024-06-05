@@ -34,6 +34,10 @@ interface roomParams{
   createdBy: string
 }
 
+interface postParams{
+  userId:string,roomName:string,text:string,files:string[] | null,title:string,body:string,pollTitle:string,pollQuestion:string,pollOption:{string:number}[]
+}
+
 export class Services {
     app;
     db;
@@ -225,11 +229,22 @@ export class Services {
       }
     }
 
-    async createPost({userId,roomName,text,files}:{userId:string,roomName:string,text:string,files:string[] | null}){
+    async createPost({userId,roomName,title,body,files,pollTitle,pollQuestion,pollOption}:postParams){
       try{
         const docRef = await addDoc(collection(this.db, "post"),{
-         userId,roomName,text,likes:0,files
+            userId,roomName,title,body,likes:0
         })
+        const userDocRef = doc(this.db, "post", docRef?.id);
+        if(docRef?.id && files){
+            const updatedData =  await updateDoc(userDocRef, {
+                files
+            });
+        }
+        if(pollTitle && pollOption && pollOption){
+          const updatedData =  await updateDoc(userDocRef, {
+            pollTitle,pollQuestion,pollOption
+        });
+        }
         return docRef; 
       }catch(err){
         console.log(err)

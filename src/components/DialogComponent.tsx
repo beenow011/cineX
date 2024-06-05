@@ -14,7 +14,7 @@ import {
     TabsTrigger,
 } from "@/components/ui/tabs"
 import { Dot } from "lucide-react"
-import { useState } from "react"
+import { useCallback, useState } from "react"
 // import {
 //     Card,
 //     CardContent,
@@ -33,9 +33,18 @@ function DialogComponent() {
         }
         return true;
     };
+
     const [value, setValue] = useState('');
+    const [props, setProps] = useState('z-50')
+
+    const handleUpload = useCallback(async (result: any) => {
+        console.log(result);
+        // setIcon(result.info.url)
+        setProps('z-50')
+    }, []);
+    console.log(props)
     return (
-        <DialogContent className="max-w-[325px] sm:max-w-[425px] lg:max-w-[825px]">
+        <DialogContent className={`max-w-[325px] sm:max-w-[425px] lg:max-w-[825px] `} >
             <DialogHeader>
                 <DialogTitle>Create Post</DialogTitle>
                 <DialogDescription>
@@ -94,7 +103,7 @@ function DialogComponent() {
                 <TabsContent value="media">
                     <div className="grid gap-4 py-4 h-full">
                         <p className="font-bold">Choose media</p>
-                        <CldUploadButton
+                        {/* <CldUploadButton
                             options={{
                                 maxFiles: 2,
                                 resourceType: 'auto', // Accept both images and videos
@@ -103,10 +112,30 @@ function DialogComponent() {
                             }}
 
                             // Add the beforeUpload handler to check file size
+                            onUpload={handleUpload}
+
                             className={buttonVariants({ variant: "secondary" })}
                             uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
                         ><p>
                                 Select an image or video for the post</p>
+                        </CldUploadButton> */}
+                        <input type="file" name="" id="" className={buttonVariants({ variant: "secondary" })} />
+                        <CldUploadButton
+                            options={{
+                                maxFiles: 2,
+                                resourceType: 'auto', // Accept both images and videos
+                                clientAllowedFormats: ['jpg', 'jpeg', 'png', 'webp', 'mp4', 'mov'], // Accept images and videos
+                                multiple: true
+                            }}
+                            onClick={() => { setProps('z-[-1]') }}
+                            onUpload={handleUpload}
+
+                            className={buttonVariants({ variant: "secondary" })}
+                            uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
+
+
+                        >
+                            <p>Select an image or video for the post</p>
                         </CldUploadButton>
                         <p>It&apos;s optional.</p>
                         <ul>

@@ -5,6 +5,7 @@ import { auth, currentUser } from "@clerk/nextjs/server";
 import service from '@/firebase/firestore';
 import { OpenAIStream } from 'ai';
 import { openai } from '@/lib/openai';
+import { uploadCloudinary } from '@/lib/cloudinary';
 export const appRouter = router({
     
     registerToFirestore: publicProcedure.mutation(async () => {
@@ -135,6 +136,16 @@ export const appRouter = router({
             };
         } catch (error) {
             console.error("Error retrieving messages:", error);
+            throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+        }
+    }),
+    uploadToClodinary: privateProcedure.input(z.object({file:z.string()})).mutation(async({input,ctx})=>{
+        try{
+            const {file}=input
+            const videoFile = await uploadCloudinary(file)
+            console.log(videoFile)
+        }catch(err){
+            console.error("Error retrieving messages:", err);
             throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
         }
     })
