@@ -39,7 +39,7 @@ function DialogComponent() {
             <DialogHeader>
                 <DialogTitle>Create Post</DialogTitle>
                 <DialogDescription>
-                    Please ensure that your post is related to this specific movie. It can be memes, discussions, or fan theories—let's keep the conversation happy and focused!
+                    Please ensure that your post is related to this specific movie. It can be memes, discussions, or fan theories—let&apos;s keep the conversation happy and focused!
                 </DialogDescription>
             </DialogHeader>
 
