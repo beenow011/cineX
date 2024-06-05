@@ -3,6 +3,8 @@ import { Loader2, Plus, Share } from "lucide-react"
 import { Button } from "../ui/button"
 import service from "@/firebase/firestore"
 import { useState } from "react"
+import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
+import DialogComponent from "../DialogComponent";
 
 
 function ClubButtons({ members, alreadyMember, userId, roomId, admin, join, leave, loading }: { members: number, alreadyMember: boolean, userId: string, roomId: string, admin: string, join: () => void, leave: () => void, loading: boolean }) {
@@ -52,10 +54,16 @@ function ClubButtons({ members, alreadyMember, userId, roomId, admin, join, leav
                     <p className="text-red-600 font-bold">Members:    <span className="text-cyan-600">{members}</span></p>
                 </div>
             </div>
-            <div>
-                <Button variant={'ghost'}>
+            <div className="flex gap-2">
+                {/* <Button variant={'ghost'}>
                     <Plus className="h-6 w-6 text-cyan-600" /> <p className="text-cyan-600 antialiased font-semibold">Post</p>
-                </Button>
+                </Button> */}
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Button variant="outline"><Plus className="h-6 w-6 text-cyan-600" /> <p className="text-cyan-600 antialiased font-semibold">Post</p></Button>
+                    </DialogTrigger>
+                    <DialogComponent />
+                </Dialog>
                 <Button variant={'ghost'}>
                     <Share className="h-6 w-6 text-cyan-600" /> <p className="text-cyan-600 antialiased font-semibold">Share</p>
                 </Button>

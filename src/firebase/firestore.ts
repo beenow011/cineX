@@ -224,6 +224,17 @@ export class Services {
         console.log(err)
       }
     }
+
+    async createPost({userId,roomName,text,files}:{userId:string,roomName:string,text:string,files:string[] | null}){
+      try{
+        const docRef = await addDoc(collection(this.db, "post"),{
+         userId,roomName,text,likes:0,files
+        })
+        return docRef; 
+      }catch(err){
+        console.log(err)
+      }
+    }
 }
 
 const service = new Services();

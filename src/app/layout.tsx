@@ -7,6 +7,7 @@ import { Header } from "@/components/Header";
 import { WavyBackground } from "@/components/ui/wavy-background";
 import { Toaster } from "@/components/ui/toaster";
 const inter = Inter({ subsets: ["latin"] });
+import 'react-loading-skeleton/dist/skeleton.css'
 
 export const metadata: Metadata = {
   title: "Create Next App",

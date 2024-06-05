@@ -71,3 +71,7 @@ body {
 .scrollbar-thumb-rounded::-webkit-scrollbar-thumb {
   border-radius: 7px;
 }
+.skeleton-custom {
+  background-color: #beb6b6; /* Base color for skeleton */
+  color: #f0a2a2 ; /* Highlight color for skeleton */
+}

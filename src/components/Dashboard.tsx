@@ -6,6 +6,7 @@ import { DocumentData } from "firebase/firestore"
 import ClubCard from "./ClubCard"
 import { useRouter } from "next/navigation"
 import { Plus } from "lucide-react"
+import Skeleton from "react-loading-skeleton"
 
 interface cardParasm {
     icon: string, banner: string, roomName: string, movie: string
@@ -29,6 +30,7 @@ function Dashboard({ name, user }: { name: string | null | undefined, user: stri
                         Welcome {name}.!
                     </h1>
                     <h1 className="text-cyan-600 text-lg font-semibold mt-3">Your Clubs</h1>
+
                     <ul className="mt-4 mb-4 md:grid flex gap-5 justify-center items-center flex-wrap md:grid-cols-2 xl:grid-cols-3">
                         <li className="h-36">
                             <div className="bg-slate-600/40 hover:bg-zinc-900 w-64 lg:w-96 p-2 flex flex-col justify-center items-center h-full  text-white rounded-t-lg my-1 lg:my-3" onClick={() => router.push(`/create-club`)}>

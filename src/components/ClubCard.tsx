@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { trpc } from "@/app/_trpc/client";
 import { useRouter } from "next/navigation";
 import { Loader } from "lucide-react";
+import Skeleton from "react-loading-skeleton";
 
 interface MovieResponse {
     Title: string;
@@ -16,6 +17,7 @@ interface MovieResponse {
 function ClubCard({ icon, banner, roomName, movie, id, index }: { icon: string, banner: string, roomName: string, movie: string, id: string, index: number }) {
     const [mov, setMovie] = useState<MovieResponse | null>()
     const router = useRouter()
+    const [load, setLoad] = useState(true)
     const { mutate: findMovie, isLoading } = trpc.retriveMoviesFromImdb.useMutation({
         onSuccess: (res) => {
             setMovie(res)
@@ -29,10 +31,15 @@ function ClubCard({ icon, banner, roomName, movie, id, index }: { icon: string, 
         if (movie)
             findMovie({ imdbId: movie })
     }, [])
+    useEffect(() => {
+        setLoad(isLoading)
+    }, [isLoading])
     return (
-        isLoading ? (
-            index == 0 &&
-            <Loader className="h-5 w-5 text-white animate-spin" />
+        load ? (
+            <div className="w-full justify-center items-center">
+                {/* <Loader className="h-5 w-5 text-white animate-spin" /> */}
+                <Skeleton height={150} className="my-2 h-full" count={1} baseColor="#52525b" highlightColor="#555" />
+            </div>
         ) : (
             <div className="bg-slate-600/40 hover:bg-zinc-900 w-80     lg:w-96 p-2    text-white rounded-t-lg my-1 lg:my-3" onClick={() => router.push(`/club/${id}`)}>
 
