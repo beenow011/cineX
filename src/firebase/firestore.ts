@@ -286,6 +286,10 @@ export class Services {
         console.log(err)
       }
     }
+
+    async getTextPost({roomID,limit}:{roomID:string,limit:number}){
+      
+    }
 }
 
 const service = new Services();

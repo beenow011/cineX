@@ -26,7 +26,7 @@ export const GET = async(req: NextRequest , res:NextApiResponse)=>{
     // return res.status(400).json({ error: 'Title and imdbID are required query parameters' });
     try{
         const response = await openai.chat.completions.create({
-            model: 'gpt-3.5-turbo', // Using Davinci model for chat completions
+            model: 'gpt-4o', // Using Davinci model for chat completions
             temperature: 0.1, // Adjust the temperature as needed
             stream: true,
             messages: [
