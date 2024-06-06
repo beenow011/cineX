@@ -33,7 +33,7 @@ export const Header = () => {
                 </SignedOut>
                 <SignedIn>
                     {
-                        pathname !== '/create-club' && <Button onClick={() => router.push('/create-club')}><PlusCircle className="h-7 w-7 bg-red-600" /> <p className="font-semibold ml-2">Room</p></Button>
+                        pathname !== '/create-club' && <Button onClick={() => router.push('/create-club')}><PlusCircle className="h-7 w-7 bg-red-600" /> <p className="font-semibold ml-2">Club</p></Button>
                     }
                     {pathname !== '/dashboard' && <Button >
                         <p className="font-semibold"><Link href={'/dashboard'}>Dashboard</Link></p>
@@ -68,7 +68,7 @@ export const Header = () => {
 
                                         <Button className="w-full" onClick={() => router.push('/reate-club')}>
                                             <PlusCircle className="h-7 w-7 bg-red-600" />
-                                            <p className="font-semibold ml-2">Room</p>
+                                            <p className="font-semibold ml-2">Club</p>
                                         </Button>
 
                                     )

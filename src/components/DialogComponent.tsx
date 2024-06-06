@@ -75,6 +75,8 @@ function DialogComponent() {
     const [optionTwo, setOptionTwo] = useState('')
     const [optionThree, setOptionThree] = useState('')
     const [postLoading, setPostLoading] = useState(false)
+    const [mediaTitle, setMediaTitle] = useState('')
+    const [mediaBody, setMediaBody] = useState('')
     const handleUpload = useCallback(async (result: any) => {
         console.log(result);
         // setIcon(result.info.url)
@@ -87,6 +89,7 @@ function DialogComponent() {
         else
             setPollOption([{ text: optionOne, count: 0 }, { text: optionTwo, count: 0 }])
     }, [optionOne, optionTwo, optionThree, optionExtend])
+
     const postText = () => {
         if (title && body) {
             setPostLoading(true)
@@ -94,13 +97,80 @@ function DialogComponent() {
                 .then(res => router.push(`/club/${roomId}`))
                 .catch(err => toast({
                     title: "Failed to post",
-                    description: "try again",
+                    description: err.message,
                     variant: 'destructive',
                 }))
                 .finally(() => setPostLoading(false))
         } else {
             toast({
                 title: "Title and Body should not be empty!",
+                description: 'Fill both the fields!',
+                variant: 'destructive',
+            });
+        }
+    }
+
+    const postMedia = () => {
+
+        if (files.length == 0) {
+            toast({
+                title: "Files are not selected!",
+                description: 'Atleast 1 file should be there',
+                variant: 'destructive',
+            });
+        } else {
+            if (mediaTitle && mediaBody) {
+                setPostLoading(true)
+                service.createMediaPost({ userId: query.data?.userId!, roomId, roomName: club?.roomName as string, title: mediaTitle, body: mediaBody, files })
+                    .then(res => router.push(`/club/${roomId}`))
+                    .catch(err => toast({
+                        title: "Failed to post",
+                        description: err.message,
+                        variant: 'destructive',
+                    }))
+                    .finally(() => setPostLoading(false))
+            } else {
+                toast({
+                    title: "Title and Body should not be empty!",
+                    description: 'Fill both the fields!',
+                    variant: 'destructive',
+                });
+            }
+        }
+    }
+
+    const postPoll = () => {
+
+        if (pollTitle && pollQuestion) {
+            if ([pollOption[0].text, pollOption[1].text].some(ele => ele?.trim() === '')) {
+
+                toast({
+                    title: "Minimum there should be two options!",
+                    description: 'Fill both the fields!',
+                    variant: 'destructive',
+                });
+                return
+            }
+            if (pollOption.length === 3 && pollOption[2].text.trim() === '') {
+                toast({
+                    title: "Options must not be empty!",
+                    description: 'Fill both the fields!',
+                    variant: 'destructive',
+                });
+                return
+            }
+            setPostLoading(true)
+            service.createPollPost({ userId: query.data?.userId!, roomId, roomName: club?.roomName as string, title: pollTitle, question: pollQuestion, pollOption })
+                .then(res => router.push(`/club/${roomId}`))
+                .catch(err => toast({
+                    title: "Failed to post",
+                    description: err.message,
+                    variant: 'destructive',
+                }))
+                .finally(() => setPostLoading(false))
+        } else {
+            toast({
+                title: "Title and Question should not be empty!",
                 description: 'Fill both the fields!',
                 variant: 'destructive',
             });
@@ -185,26 +255,11 @@ function DialogComponent() {
                             <Label htmlFor="name" className="text-right">
                                 Title
                             </Label>
-                            <Input id="name" placeholder="Title of your post" className="col-span-3 text-black " onChange={(e) => setTitle(e.target.value)} value={title} />
+                            <Input id="name" placeholder="Title of your post" className="col-span-3 text-black " onChange={(e) => setMediaTitle(e.target.value)} value={mediaTitle} />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
                             <p className="font-bold">Choose media</p>
-                            {/* <CldUploadButton
-                            options={{
-                                maxFiles: 2,
-                                resourceType: 'auto', // Accept both images and videos
-                                clientAllowedFormats: ['jpg', 'jpeg', 'png', 'webp', 'mp4', 'mov', 'avi', 'mkv'], // Accept images and videos
-                                multiple: true
-                            }}
 
-                            // Add the beforeUpload handler to check file size
-                            onUpload={handleUpload}
-
-                            className={buttonVariants({ variant: "secondary" })}
-                            uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
-                        ><p>
-                                Select an image or video for the post</p>
-                        </CldUploadButton> */}
                             <Button variant={"secondary"} disabled={files.length >= 2}>
                                 <CldUploadButton
                                     options={{
@@ -224,12 +279,7 @@ function DialogComponent() {
                                     <p>Image or video</p>
                                 </CldUploadButton>
                             </Button>
-                            {files && files.map((ele, i) => (
-                                <div className="flex gap-2">
-                                    <a href={ele} target="_blank" className="text-red-600">File {i + 1}</a>
-                                    <Delete className="h-5 w-6 mt-1 text-red-600" onClick={() => setFiles(prev => prev.filter(e => e !== ele))} />
-                                </div>
-                            ))}
+
 
                             <p className="cols-span-3">It&apos;s optional.</p>
                             <ul>
@@ -240,6 +290,12 @@ function DialogComponent() {
                                     <Dot className="h-6 w-6" />file size not exceeding 25mb
                                 </li>
                             </ul>
+                            {files && files.map((ele, i) => (
+                                <div className="flex gap-2" key={i}>
+                                    <a href={ele} target="_blank" className="text-red-600">File {i + 1}</a>
+                                    <Delete className="h-5 w-6 mt-1 text-red-600" onClick={() => setFiles(prev => prev.filter(e => e !== ele))} />
+                                </div>
+                            ))}
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="username" className="text-right">
@@ -256,8 +312,8 @@ function DialogComponent() {
                             <div className="w-full col-span-3 mb-16 md:mb-10">
                                 <ReactQuill
                                     theme="snow"
-                                    value={body}
-                                    onChange={setBody}
+                                    value={mediaBody}
+                                    onChange={setMediaBody}
                                     className="h-24 md:h-36 "
                                     modules={{
                                         toolbar: [
@@ -273,7 +329,7 @@ function DialogComponent() {
                             </div>
                         </div>
                         <div className="absolute right-1 bottom-10">
-                            <Button type="submit">Post</Button>
+                            <Button type="submit" onClick={postMedia} disabled={postLoading}>{postLoading ? (<Loader2 className="h-6 w-6 text-white animate-spin" />) : 'Post'}</Button>
                         </div>
                     </div>
                 </TabsContent>
@@ -330,7 +386,7 @@ function DialogComponent() {
                             </div>
                         </div>
                         <div className="absolute right-1 bottom-10">
-                            <Button type="submit">Post</Button>
+                            <Button type="submit" onClick={postPoll} disabled={postLoading}>{postLoading ? (<Loader2 className="h-6 w-6 text-white animate-spin" />) : 'Post'}</Button>
                         </div>
                     </div>
                 </TabsContent>

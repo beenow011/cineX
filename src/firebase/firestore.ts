@@ -37,7 +37,16 @@ interface roomParams{
 interface postParams{
   userId:string,roomName:string,title:string,body:string,roomId:string
 }
-
+interface post2Params{
+  userId:string,roomName:string,title:string,body:string,roomId:string,files:string[]
+}
+interface pollOptionParams {
+  text: string,
+  count: number
+}
+interface post3Params{
+  userId:string,roomName:string,title:string,question:string,roomId:string,pollOption:pollOptionParams[]
+}
 export class Services {
     app;
     db;
@@ -234,7 +243,41 @@ export class Services {
         if(title.length===0 && body.length===0)
           throw new Error('Title and Body field should not be empty')
         const docRef = await addDoc(collection(this.db, "post"),{
-            userId,roomName,roomId,title,body,likes:0
+            userId,roomName,roomId,title,body,likes:0,createdAt:Timestamp.fromDate(new Date())
+        })
+        
+      return docRef; 
+        
+      }catch(err){
+        console.log(err)
+      }
+    }
+    async createMediaPost({userId,roomName,title,body,roomId , files}:post2Params){
+      try{
+        if(title.length===0 && body.length===0 && files.length == 0)
+          throw new Error('Title and Body field should not be empty')
+        const docRef = await addDoc(collection(this.db, "mediaPost"),{
+            userId,roomName,roomId,title,body,likes:0,files,createdAt:Timestamp.fromDate(new Date())
+        })
+        
+      return docRef; 
+        
+      }catch(err){
+        console.log(err)
+      }
+    }
+    async createPollPost({userId,roomName,title,question,roomId , pollOption}:post3Params){
+      try{
+        if(title.length===0 && question.length===0)
+          throw new Error('Title and Body field should not be empty')
+        if([pollOption[0].text,pollOption[1].text].some(ele=>ele?.trim()==='')){
+          throw new Error('Minimum there should be two options!')
+        }
+        if(pollOption.length===3 &&  pollOption[2].text.trim()===''){
+          throw new Error('Options must not be empty!')
+        }
+        const docRef = await addDoc(collection(this.db, "pollPost"),{
+            userId,roomName,roomId,title,question,likes:0,pollOption,createdAt:Timestamp.fromDate(new Date())
         })
         
       return docRef; 
