@@ -114,7 +114,7 @@ function ClubPage({ club, roomId, loadingMain }: { club: DocumentData | undefine
 
             <div className="flex flex-col-reverse md:flex-row mt-3">
                 <div className="flex-1 p-3 ">
-                    <ClubButtons members={club?.users.length | 0} alreadyMember={flag} userId={query.data?.userId!} roomId={roomId} admin={club?.createdBy} join={joinRoom} leave={leaveRoom} loading={loading} />
+                    <ClubButtons members={club?.users.length | 0} alreadyMember={flag} userId={query.data?.userId!} roomId={roomId} admin={club?.createdBy} join={joinRoom} leave={leaveRoom} loading={loading} roomName={club?.roomName} />
                     <ClubPosts />
                 </div>
 

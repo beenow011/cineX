@@ -1,4 +1,3 @@
-'use client';
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import { MovieFound } from "@/components/MovieFound";
 import { MovieInput } from "@/components/MovieInput";

@@ -6,9 +6,10 @@ import { useCallback, useState } from "react"
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import DialogComponent from "../DialogComponent";
 import { CldUploadButton } from "next-cloudinary";
+import { useRouter } from "next/navigation";
 
 
-function ClubButtons({ members, alreadyMember, userId, roomId, admin, join, leave, loading }: { members: number, alreadyMember: boolean, userId: string, roomId: string, admin: string, join: () => void, leave: () => void, loading: boolean }) {
+function ClubButtons({ members, alreadyMember, userId, roomId, admin, join, leave, loading, roomName }: { members: number, alreadyMember: boolean, userId: string, roomId: string, admin: string, join: () => void, leave: () => void, loading: boolean, roomName: string }) {
     // console.log(userId, roomId)
     // const [loading, setLoading] = useState(false)
     // const joinRoom = () => {
@@ -23,6 +24,7 @@ function ClubButtons({ members, alreadyMember, userId, roomId, admin, join, leav
         console.log(result);
         // setIcon(result.info.url)
     }, []);
+    const router = useRouter()
     return (
         <div className="w-full bg-slate-700/50  rounded-lg flex justify-between gap-3 p-2">
             <div className="flex gap-3">
@@ -63,12 +65,8 @@ function ClubButtons({ members, alreadyMember, userId, roomId, admin, join, leav
                     <Plus className="h-6 w-6 text-cyan-600" /> <p className="text-cyan-600 antialiased font-semibold">Post</p>
                 </Button> */}
 
-                <Dialog>
-                    <DialogTrigger asChild>
-                        <Button variant="outline"><Plus className="h-6 w-6 text-cyan-600" /> <p className="text-cyan-600 antialiased font-semibold">Post</p></Button>
-                    </DialogTrigger>
-                    <DialogComponent />
-                </Dialog>
+                <Button variant="outline"><Plus className="h-6 w-6 text-cyan-600" onClick={() => router.push(`/create-post/${roomId}`)} /> <p className="text-cyan-600 antialiased font-semibold" >Post</p></Button>
+
                 <Button variant={'ghost'}>
                     <Share className="h-6 w-6 text-cyan-600" /> <p className="text-cyan-600 antialiased font-semibold">Share</p>
                 </Button>

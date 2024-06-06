@@ -35,7 +35,7 @@ interface roomParams{
 }
 
 interface postParams{
-  userId:string,roomName:string,text:string,files:string[] | null,title:string,body:string,pollTitle:string,pollQuestion:string,pollOption:{string:number}[]
+  userId:string,roomName:string,title:string,body:string,roomId:string
 }
 
 export class Services {
@@ -229,23 +229,16 @@ export class Services {
       }
     }
 
-    async createPost({userId,roomName,title,body,files,pollTitle,pollQuestion,pollOption}:postParams){
+    async createTextPost({userId,roomName,title,body,roomId}:postParams){
       try{
+        if(title.length===0 && body.length===0)
+          throw new Error('Title and Body field should not be empty')
         const docRef = await addDoc(collection(this.db, "post"),{
-            userId,roomName,title,body,likes:0
+            userId,roomName,roomId,title,body,likes:0
         })
-        const userDocRef = doc(this.db, "post", docRef?.id);
-        if(docRef?.id && files){
-            const updatedData =  await updateDoc(userDocRef, {
-                files
-            });
-        }
-        if(pollTitle && pollOption && pollOption){
-          const updatedData =  await updateDoc(userDocRef, {
-            pollTitle,pollQuestion,pollOption
-        });
-        }
-        return docRef; 
+        
+      return docRef; 
+        
       }catch(err){
         console.log(err)
       }

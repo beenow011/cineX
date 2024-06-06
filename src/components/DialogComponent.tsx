@@ -13,8 +13,15 @@ import {
     TabsList,
     TabsTrigger,
 } from "@/components/ui/tabs"
-import { Dot } from "lucide-react"
-import { useCallback, useState } from "react"
+import { Delete, Dot, Loader2, MinusCircle } from "lucide-react"
+import { useCallback, useEffect, useState } from "react"
+import { useParams, useRouter } from "next/navigation";
+import { DocumentData } from "firebase/firestore";
+import service from "@/firebase/firestore";
+import { toast } from "./ui/use-toast";
+import { Avatar, AvatarImage } from "./ui/avatar";
+import { count } from "console";
+import { trpc } from "@/app/_trpc/client";
 // import {
 //     Card,
 //     CardContent,
@@ -23,8 +30,31 @@ import { useCallback, useState } from "react"
 //     CardHeader,
 //     CardTitle,
 //   } from "@/components/ui/card"
-
+interface pollOptionParams {
+    text: string,
+    count: number
+}
 function DialogComponent() {
+
+    const { roomId } = useParams<{ roomId: string }>()
+    const router = useRouter()
+    const [club, setClub] = useState<DocumentData>()
+    const [loading, setLoading] = useState<boolean>(false)
+    // console.log(roomID)
+    const query = trpc.getUser.useQuery()
+    useEffect(() => {
+        setLoading(true)
+        service.retrieveRoom({ roomID: roomId }).then((res) => {
+
+            setClub(res)
+        }).catch(err => {
+            toast({
+                title: "Failed to load the club!",
+                description: 'Check the url and try again!',
+                variant: 'destructive',
+            });
+        }).finally(() => setLoading(false))
+    }, [])
     const handleBeforeUpload = (file: File) => {
         const isValidSize = file.size / 1024 / 1024 < 20; // Convert size to MB and check if it's less than 20MB
         if (!isValidSize) {
@@ -34,26 +64,72 @@ function DialogComponent() {
         return true;
     };
 
-    const [value, setValue] = useState('');
-    const [props, setProps] = useState('z-50')
-
+    const [body, setBody] = useState('');
+    const [pollQuestion, setPollQuestion] = useState('');
+    const [title, setTitle] = useState('')
+    const [optionExtend, setOption] = useState(false)
+    const [files, setFiles] = useState<string[]>([])
+    const [pollTitle, setPollTitle] = useState('')
+    const [pollOption, setPollOption] = useState<pollOptionParams[]>([])
+    const [optionOne, setOptionOne] = useState('')
+    const [optionTwo, setOptionTwo] = useState('')
+    const [optionThree, setOptionThree] = useState('')
+    const [postLoading, setPostLoading] = useState(false)
     const handleUpload = useCallback(async (result: any) => {
         console.log(result);
         // setIcon(result.info.url)
-        setProps('z-50')
+        setFiles(prev => [...prev, result.info.url])
+
     }, []);
-    console.log(props)
+    useEffect(() => {
+        if (optionExtend)
+            setPollOption([{ text: optionOne, count: 0 }, { text: optionTwo, count: 0 }, { text: optionThree, count: 0 }])
+        else
+            setPollOption([{ text: optionOne, count: 0 }, { text: optionTwo, count: 0 }])
+    }, [optionOne, optionTwo, optionThree, optionExtend])
+    const postText = () => {
+        if (title && body) {
+            setPostLoading(true)
+            service.createTextPost({ userId: query.data?.userId!, roomId, roomName: club?.roomName as string, title, body })
+                .then(res => router.push(`/club/${roomId}`))
+                .catch(err => toast({
+                    title: "Failed to post",
+                    description: "try again",
+                    variant: 'destructive',
+                }))
+                .finally(() => setPostLoading(false))
+        } else {
+            toast({
+                title: "Title and Body should not be empty!",
+                description: 'Fill both the fields!',
+                variant: 'destructive',
+            });
+        }
+    }
+    console.log(`title:${title} body:${body} , files:${files} `)
+    console.log(pollOption)
     return (
-        <DialogContent className={`max-w-[325px] sm:max-w-[425px] lg:max-w-[825px] `} >
-            <DialogHeader>
-                <DialogTitle>Create Post</DialogTitle>
-                <DialogDescription>
+        <div className={`max-w-[325px] sm:max-w-[425px] lg:max-w-[825px] w-full relative mt-3 text-white`}>
+            <div className="mb-4">
+                <h1 className="text-red-600 font-bold text-2xl">Create Post</h1>
+                <p>
                     Please ensure that your post is related to this specific movie. It can be memes, discussions, or fan theories—let&apos;s keep the conversation happy and focused!
-                </DialogDescription>
-            </DialogHeader>
+                </p>
 
+            </div>
 
-            <Tabs defaultValue="account" className="w-full">
+            <div className="rounded-full w-full mb-2 h-12 flex justify-center items-center border shadow-md shadow-red-600">
+                {loading ? (
+                    <Loader2 className="h-4 w-4 text-white animate-spin" />
+                ) : (<div className="flex justify-center items-center gap-3">
+                    <Avatar className="h-10 w-10   ml-2 bg-black ">
+                        <AvatarImage src={club?.icon} alt="icon" className="object-contain" />
+                    </Avatar>
+                    <h1 className="text-sm">{club?.roomName}</h1>
+                </div>)}
+            </div>
+
+            <Tabs defaultValue="text" className="w-full">
                 <TabsList className="grid w-full grid-cols-3">
                     <TabsTrigger value="text">Text</TabsTrigger>
                     <TabsTrigger value="media">Media</TabsTrigger>
@@ -65,7 +141,7 @@ function DialogComponent() {
                             <Label htmlFor="name" className="text-right">
                                 Title
                             </Label>
-                            <Input id="name" placeholder="Title of your post" className="col-span-3" />
+                            <Input id="name" placeholder="Title of your post" className="col-span-3 text-black " onChange={(e) => setTitle(e.target.value)} value={title} />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="username" className="text-right">
@@ -82,8 +158,8 @@ function DialogComponent() {
                             <div className="w-full col-span-3 mb-16 md:mb-10">
                                 <ReactQuill
                                     theme="snow"
-                                    value={value}
-                                    onChange={setValue}
+                                    value={body}
+                                    onChange={setBody}
                                     className="h-24 md:h-36 "
                                     modules={{
                                         toolbar: [
@@ -98,12 +174,22 @@ function DialogComponent() {
                                 />
                             </div>
                         </div>
+                        <div className="absolute right-1 bottom-10">
+                            <Button type="submit" onClick={postText} disabled={postLoading}>{postLoading ? (<Loader2 className="h-6 w-6 text-white animate-spin" />) : 'Post'}</Button>
+                        </div>
                     </div>
                 </TabsContent>
                 <TabsContent value="media">
                     <div className="grid gap-4 py-4 h-full">
-                        <p className="font-bold">Choose media</p>
-                        {/* <CldUploadButton
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="name" className="text-right">
+                                Title
+                            </Label>
+                            <Input id="name" placeholder="Title of your post" className="col-span-3 text-black " onChange={(e) => setTitle(e.target.value)} value={title} />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <p className="font-bold">Choose media</p>
+                            {/* <CldUploadButton
                             options={{
                                 maxFiles: 2,
                                 resourceType: 'auto', // Accept both images and videos
@@ -119,33 +205,76 @@ function DialogComponent() {
                         ><p>
                                 Select an image or video for the post</p>
                         </CldUploadButton> */}
-                        <input type="file" name="" id="" className={buttonVariants({ variant: "secondary" })} />
-                        <CldUploadButton
-                            options={{
-                                maxFiles: 2,
-                                resourceType: 'auto', // Accept both images and videos
-                                clientAllowedFormats: ['jpg', 'jpeg', 'png', 'webp', 'mp4', 'mov'], // Accept images and videos
-                                multiple: true
-                            }}
-                            onClick={() => { setProps('z-[-1]') }}
-                            onUpload={handleUpload}
+                            <Button variant={"secondary"} disabled={files.length >= 2}>
+                                <CldUploadButton
+                                    options={{
+                                        maxFiles: 2,
+                                        resourceType: 'auto', // Accept both images and videos
+                                        clientAllowedFormats: ['jpg', 'jpeg', 'png', 'webp', 'mp4', 'mov'], // Accept images and videos
+                                        multiple: true
+                                    }}
 
-                            className={buttonVariants({ variant: "secondary" })}
-                            uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
+                                    onUpload={handleUpload}
 
 
-                        >
-                            <p>Select an image or video for the post</p>
-                        </CldUploadButton>
-                        <p>It&apos;s optional.</p>
-                        <ul>
-                            <li className="flex">
-                                <Dot className="h-6 w-6" />Max files : 2
-                            </li>
-                            <li className="flex">
-                                <Dot className="h-6 w-6" />file size not exceeding 25mb
-                            </li>
-                        </ul>
+                                    uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
+
+
+                                >
+                                    <p>Image or video</p>
+                                </CldUploadButton>
+                            </Button>
+                            {files && files.map((ele, i) => (
+                                <div className="flex gap-2">
+                                    <a href={ele} target="_blank" className="text-red-600">File {i + 1}</a>
+                                    <Delete className="h-5 w-6 mt-1 text-red-600" onClick={() => setFiles(prev => prev.filter(e => e !== ele))} />
+                                </div>
+                            ))}
+
+                            <p className="cols-span-3">It&apos;s optional.</p>
+                            <ul>
+                                <li className="flex">
+                                    <Dot className="h-6 w-6" />Max files : 2
+                                </li>
+                                <li className="flex">
+                                    <Dot className="h-6 w-6" />file size not exceeding 25mb
+                                </li>
+                            </ul>
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="username" className="text-right">
+                                Body
+                            </Label>
+                            {/* <Textarea
+                                placeholder="Body of your post"
+                                rows={10}
+
+                                className="resize-none w-full col-span-3"
+
+
+                            /> */}
+                            <div className="w-full col-span-3 mb-16 md:mb-10">
+                                <ReactQuill
+                                    theme="snow"
+                                    value={body}
+                                    onChange={setBody}
+                                    className="h-24 md:h-36 "
+                                    modules={{
+                                        toolbar: [
+                                            [{ header: [1, 2, false] }],
+                                            ["bold", "italic", "underline", "strike"],
+                                            [{ list: "ordered" }, { list: "bullet" }],
+                                            ["link"],
+                                            ["clean"],
+                                        ],
+                                    }}
+
+                                />
+                            </div>
+                        </div>
+                        <div className="absolute right-1 bottom-10">
+                            <Button type="submit">Post</Button>
+                        </div>
                     </div>
                 </TabsContent>
                 <TabsContent value="poll">
@@ -154,7 +283,7 @@ function DialogComponent() {
                             <Label htmlFor="name" className="text-right">
                                 Title
                             </Label>
-                            <Input id="name" placeholder="Title of your post" className="col-span-3" />
+                            <Input id="name" placeholder="Title of your Poll" className="col-span-3 text-black" required value={pollTitle} onChange={(e) => setPollTitle(e.target.value)} />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="username" className="text-right">
@@ -171,8 +300,8 @@ function DialogComponent() {
                             <div className="w-full col-span-3 mb-10">
                                 <ReactQuill
                                     theme="snow"
-                                    value={value}
-                                    onChange={setValue}
+                                    value={pollQuestion}
+                                    onChange={setPollQuestion}
                                     className="h-36 "
                                     modules={{
                                         toolbar: [
@@ -187,15 +316,21 @@ function DialogComponent() {
                                 />
                             </div>
                         </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
+                        <div className="grid grid-cols-4 items-center gap-4 text-black">
                             <Label htmlFor="name" className="text-right">
                                 Options
                             </Label>
                             <div className="col-span-3 flex flex-col gap-2" >
-                                <Input id="name" placeholder="Title of your post" className="col-span-3" />
-                                <Input id="name" placeholder="Title of your post" className="col-span-3" />
-                                <Input id="name" placeholder="Title of your post" className="col-span-3" />
+                                <Input id="name" placeholder="Option 1" className="col-span-3" onChange={(e) => setOptionOne(e.target.value)} />
+                                <Input id="name" placeholder="Option 2" className="col-span-3" onChange={(e) => setOptionTwo(e.target.value)} />
+                                {optionExtend ? (<div className="col-span-3 relative">
+                                    <Button onClick={() => { setOption(false) }} className="absolute right-0"><MinusCircle className="h-5 w-5 text-white" /></Button>
+                                    <Input id="name" placeholder="Option 3" onChange={(e) => setOptionThree(e.target.value)} /></div>) : (<Button onClick={() => { setOption(true) }} variant={'secondary'}>Add another option</Button>)}
+
                             </div>
+                        </div>
+                        <div className="absolute right-1 bottom-10">
+                            <Button type="submit">Post</Button>
                         </div>
                     </div>
                 </TabsContent>
@@ -206,10 +341,9 @@ function DialogComponent() {
 
 
 
-            <DialogFooter>
-                <Button type="submit">Save changes</Button>
-            </DialogFooter>
-        </DialogContent>)
+
+        </div>
+    )
 }
 
 export default DialogComponent
