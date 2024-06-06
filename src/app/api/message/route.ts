@@ -62,7 +62,7 @@ export const POST = async (req: NextRequest) => {
         })}context:MovieName:${movieName} IMDBid-${movieID} directed by ${Director} in year${Year} USER INPUT:${message}`;
 
         const response = await openai.chat.completions.create({
-            model: 'gpt-4o',
+            model: 'gpt-3.5-turbo',
             temperature: 0.7, // Adjust the temperature as needed
             stream: true,
             messages: [
