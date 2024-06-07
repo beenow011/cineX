@@ -36,7 +36,7 @@ function ClubMovie({ movieID }: ClubMovieProps) {
     }, [movieID, searchFromApiById]);
 
     return (
-        <div className="flex-3 text-white bg-zinc-900 w-full md:w-64 flex flex-col justify-center items-center p-3">
+        <div className="flex-3 text-white bg-zinc-900 w-full md:w-64 h-fit flex flex-col justify-center items-center p-3 md:sticky top-5">
             <p className='text-white text-xl font-bold'>Movie info</p>
             {isLoading1 ? (
                 <Loader className="h-6 w-6 text-white animate-spin" />

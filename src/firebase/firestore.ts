@@ -98,6 +98,24 @@ export class Services {
             throw error;
         }
     }
+    async getUser({uId}:{uId:string}){
+      try{
+        const baseQuery = query(collection(this.db, 'users'), where('uId','==',uId));
+        // const docSnap = await getDoc(docRef);
+        const querySnapshot = await getDocs(baseQuery);
+        if (!querySnapshot.empty) {
+          // console.log(querySnapshot)
+          const docs = querySnapshot.docs.map(doc => doc.data());
+          return docs;
+      }else{
+        throw new Error('No user found')
+      }
+      
+    }catch(err){
+        console.log(err)
+        throw new Error('No user found')
+      }
+    }
 
     async retrievePrevMsg({ uId, movieID, limit: limit1, order, lastVisible }:PrevMsgParams) {
         try {
@@ -146,7 +164,7 @@ export class Services {
         try{
           const q = query(collection(this.db, "room"), where("roomName", "==", roomName));
             const querySnapshot = await getDocs(q);
-            console.log(querySnapshot)
+            // console.log(querySnapshot)
             
           
             if (!querySnapshot.empty) {
@@ -242,7 +260,7 @@ export class Services {
       try{
         if(title.length===0 && body.length===0)
           throw new Error('Title and Body field should not be empty')
-        const docRef = await addDoc(collection(this.db, "post"),{
+        const docRef = await addDoc(collection(this.db, "textPost"),{
             userId,roomName,roomId,title,body,likes:0,createdAt:Timestamp.fromDate(new Date())
         })
         
@@ -288,7 +306,100 @@ export class Services {
     }
 
     async getTextPost({roomID,limit}:{roomID:string,limit:number}){
-      
+      try {
+          
+        let baseQuery = query(
+          collection(this.db, "textPost"),
+          where("roomId", "==", roomID),
+          orderBy("createdAt", 'desc')
+        );
+        
+    
+    
+    
+        const querySnapshot = await getDocs(baseQuery);
+        // console.log('Query snapshot:', querySnapshot);
+    
+        if (!querySnapshot.empty) {
+         
+          const docs = querySnapshot.docs.map(doc => {
+            return {
+                id: doc.id,
+                ...doc.data()
+            };
+        });
+          // console.log('Retrieved documents:', docs);
+          const userDoc = querySnapshot.docs[0];
+          // console.log(userDoc.data());
+          return docs;
+        } else {
+          
+          return null;
+        }
+      } catch (err) {
+        console.error('Error retrieving messages:', err);
+        throw err;
+      }
+    }
+    async getMediaPost({roomID,limit}:{roomID:string,limit:number}){
+      try {
+          
+        let baseQuery = query(
+          collection(this.db, "mediaPost"),
+          where("roomId", "==", roomID),
+          orderBy("createdAt", 'desc')
+        );
+        
+    
+    
+    
+        const querySnapshot = await getDocs(baseQuery);
+        // console.log('Query snapshot:', querySnapshot);
+    
+        if (!querySnapshot.empty) {
+          const docs = querySnapshot.docs.map(doc => doc.data());
+          // console.log('Retrieved documents:', docs);
+          const userDoc = querySnapshot.docs[0];
+          // console.log(userDoc.data());
+          return docs;
+        } else {
+          
+          return null;
+        }
+      } catch (err) {
+        console.error('Error retrieving messages:', err);
+        throw err;
+      }
+    }
+    async getPollPost({roomID,limit}:{roomID:string,limit:number}){
+      try {
+          
+        let baseQuery = query(
+          collection(this.db, "pollPost"),
+          where("roomId", "==", roomID),
+          orderBy("createdAt", 'desc')
+        );
+        
+    
+    
+    
+        const querySnapshot = await getDocs(baseQuery);
+        // console.log('Query snapshot:', querySnapshot);
+    
+        if (!querySnapshot.empty) {
+          const docs = querySnapshot.docs.map(doc => doc.data());
+          // console.log('Retrieved documents:', docs);
+          const userDoc = querySnapshot.docs[0];
+          // console.log(userDoc.data());
+          return docs;
+        } else {
+          
+          return null;
+        }
+      } catch (err) {
+        console.error('Error retrieving messages:', err);
+        throw err;
+      }
     }
 }
 

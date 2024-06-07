@@ -244,7 +244,7 @@ function DialogComponent() {
                                 />
                             </div>
                         </div>
-                        <div className="absolute right-1 bottom-10">
+                        <div className="absolute right-1 bottom-32 md:bottom-10">
                             <Button type="submit" onClick={postText} disabled={postLoading}>{postLoading ? (<Loader2 className="h-6 w-6 text-white animate-spin" />) : 'Post'}</Button>
                         </div>
                     </div>
@@ -257,7 +257,7 @@ function DialogComponent() {
                             </Label>
                             <Input id="name" placeholder="Title of your post" className="col-span-3 text-black " onChange={(e) => setMediaTitle(e.target.value)} value={mediaTitle} />
                         </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
+                        <div className="grid grid-cols-1 lg:grid-cols-4 items-center gap-4">
                             <p className="font-bold">Choose media</p>
 
                             <Button variant={"secondary"} disabled={files.length >= 2}>
@@ -385,7 +385,7 @@ function DialogComponent() {
 
                             </div>
                         </div>
-                        <div className="absolute right-1 bottom-10">
+                        <div className="absolute right-1 bottom-20 md:bottom-10">
                             <Button type="submit" onClick={postPoll} disabled={postLoading}>{postLoading ? (<Loader2 className="h-6 w-6 text-white animate-spin" />) : 'Post'}</Button>
                         </div>
                     </div>

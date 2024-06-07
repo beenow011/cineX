@@ -86,7 +86,7 @@ function ClubPage({ club, roomId, loadingMain }: { club: DocumentData | undefine
 
             </div>
             <div className="mt-4 bg-zinc-900 p-4 rounded-b-lg flex h-36 overflow-scroll relative md:hidden">
-                <Avatar className="h-16 w-16 md:h-48 md:w-48 fixed ">
+                <Avatar className="h-16 w-16 md:h-48 md:w-48 absloute ">
                     <AvatarImage src={club?.icon} alt="icon" className="object-contain" />
 
                 </Avatar>
@@ -112,10 +112,10 @@ function ClubPage({ club, roomId, loadingMain }: { club: DocumentData | undefine
             </div>
 
 
-            <div className="flex flex-col-reverse md:flex-row mt-3">
+            <div className="flex flex-col-reverse md:flex-row mt-3 relative">
                 <div className="flex-1 p-3 ">
                     <ClubButtons members={club?.users.length | 0} alreadyMember={flag} userId={query.data?.userId!} roomId={roomId} admin={club?.createdBy} join={joinRoom} leave={leaveRoom} loading={loading} roomName={club?.roomName} />
-                    <ClubPosts />
+                    <ClubPosts roomId={roomId} />
                 </div>
 
 

@@ -3,7 +3,7 @@ import TextPost from "../Post/TextPost"
 import MediaPost from "../Post/MediaPost"
 import PollPost from "../Post/PollPost"
 
-function ClubPosts() {
+function ClubPosts({ roomId }: { roomId: string }) {
     const [field, setField] = useState('Text')
     return (
         <div className="flex-1 text-white m-3">
@@ -16,7 +16,7 @@ function ClubPosts() {
 
             {
                 field === 'Text' && (
-                    <TextPost />
+                    <TextPost roomId={roomId} />
                 )
             }
             {
