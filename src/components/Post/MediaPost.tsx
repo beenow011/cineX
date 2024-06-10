@@ -3,6 +3,7 @@ import { DocumentData } from "firebase/firestore"
 import { useEffect, useState } from "react"
 import TextPostCard from "./TextPostCard";
 import MediaPostCard from "./MediaPostCard";
+import NoPost from "./NoPost";
 
 function MediaPost({ roomId }: { roomId: string }) {
     const [posts, setPosts] = useState<DocumentData[] | null>()
@@ -31,11 +32,15 @@ function MediaPost({ roomId }: { roomId: string }) {
         <div className="mt-3">
             <ul>
                 {
-                    posts?.map(ele => (
-                        <li key={ele.id}>
-                            <MediaPostCard ele={ele} />
-                        </li>
-                    ))
+                    posts ? (
+                        posts.map(ele => (
+                            <li key={ele.id}>
+                                <MediaPostCard ele={ele} />
+                            </li>
+                        ))
+                    ) : (
+                        <NoPost roomId={roomId} />
+                    )
                 }
             </ul>
         </div>

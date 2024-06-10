@@ -2,6 +2,7 @@ import service from "@/firebase/firestore"
 import { DocumentData } from "firebase/firestore"
 import { useEffect, useState } from "react"
 import TextPostCard from "./TextPostCard";
+import NoPost from "./NoPost";
 
 function TextPost({ roomId }: { roomId: string }) {
     const [posts, setPosts] = useState<DocumentData[] | null>()
@@ -30,11 +31,15 @@ function TextPost({ roomId }: { roomId: string }) {
         <div className="mt-3">
             <ul>
                 {
-                    posts?.map(ele => (
-                        <li key={ele.id}>
-                            <TextPostCard ele={ele} />
-                        </li>
-                    ))
+                    posts ? (
+                        posts.map(ele => (
+                            <li key={ele.id}>
+                                <TextPostCard ele={ele} />
+                            </li>
+                        ))
+                    ) : (
+                        <NoPost roomId={roomId} />
+                    )
                 }
             </ul>
         </div>

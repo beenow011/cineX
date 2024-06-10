@@ -71,7 +71,7 @@ function ClubPage({ club, roomId, loadingMain }: { club: DocumentData | undefine
                         </div>
                     ) : (
                         <div className="p-3 h-full flex flex-col my-auto">
-                            <p className="text-red-600 antialiased">
+                            <p className="text-zinc-400 ">
                                 {
                                     strings && strings[0]
                                 }/<span className="font-bold text-cyan-600 text-2xl">{strings && strings[1]}</span></p>

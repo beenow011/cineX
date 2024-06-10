@@ -26,7 +26,7 @@ function ClubPosts({ roomId }: { roomId: string }) {
             }
             {
                 field === 'Poll' && (
-                    <PollPost />
+                    <PollPost roomId={roomId} />
                 )
             }
 

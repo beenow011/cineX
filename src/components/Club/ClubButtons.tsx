@@ -56,7 +56,7 @@ function ClubButtons({ members, alreadyMember, userId, roomId, admin, join, leav
                     )
                 }
 
-                <div className="p-2 flex">
+                <div className="p-2 md:flex hidden ">
                     <p className="text-red-600  md:font-bold">Members:    <span className="text-cyan-600">{members}</span></p>
                 </div>
             </div>
