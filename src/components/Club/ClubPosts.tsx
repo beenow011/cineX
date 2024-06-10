@@ -21,7 +21,7 @@ function ClubPosts({ roomId }: { roomId: string }) {
             }
             {
                 field === 'Media' && (
-                    <MediaPost />
+                    <MediaPost roomId={roomId} />
                 )
             }
             {

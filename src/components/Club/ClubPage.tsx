@@ -41,7 +41,7 @@ function ClubPage({ club, roomId, loadingMain }: { club: DocumentData | undefine
 
     return (
         <div>
-            <AspectRatio ratio={4 / 1} className="bg-gradient-to-r from-black to-zinc-600">
+            <AspectRatio ratio={7.5 / 1} className="bg-gradient-to-r from-black to-zinc-600">
                 {
                     loadingMain ? (<Skeleton className="my-2 h-full object-contain " count={1} baseColor="black" />) : (
 
@@ -49,7 +49,7 @@ function ClubPage({ club, roomId, loadingMain }: { club: DocumentData | undefine
                             src={club?.banner}
                             alt="Photo by Drew Beamer"
                             fill
-                            className="rounded-md object-contain"
+                            className="rounded-md object-cover"
                         />
 
                     )
@@ -60,7 +60,7 @@ function ClubPage({ club, roomId, loadingMain }: { club: DocumentData | undefine
                 <Avatar className="h-16 w-16 md:h-48 md:w-48 ">
 
                     <AvatarImage src={club?.icon} alt="icon" className="object-contain" />
-                    <AvatarFallback>{club?.roomName}</AvatarFallback>
+
                 </Avatar>
                 {
                     loadingMain ? (
