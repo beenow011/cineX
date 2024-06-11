@@ -5,11 +5,24 @@ import parse from "html-react-parser"
 import { MoveUp, ThumbsUp } from "lucide-react"
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { trpc } from "@/app/_trpc/client"
+import { toast } from "../ui/use-toast"
 function TextPostCard({ ele }: { ele: DocumentData }) {
     const [user, setUser] = useState<DocumentData[] | null>(null)
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
-
+    const [isLiked, setIsLiked] = useState(false)
+    const [flag, setFlag] = useState(false)
+    const query = trpc.getUser.useQuery()
+    const [likes, setLikes] = useState(ele.likes.length as number)
+    useEffect(() => {
+        if (flag) {
+            if (isLiked)
+                setLikes(prev => prev + 1)
+            else
+                setLikes(prev => prev - 1)
+        }
+    }, [isLiked])
     useEffect(() => {
         service.getUser({ uId: ele.userId })
             .then(res => {
@@ -23,12 +36,50 @@ function TextPostCard({ ele }: { ele: DocumentData }) {
             })
     }, [ele])
 
+    useEffect(() => {
+        if (query.data) {
+            setIsLiked(ele.likes.includes(query.data.userId!))
+        }
+    }, [ele])
+
     if (loading) {
         return <p className="text-white">Loading...</p>
     }
 
     if (error) {
         return <p className="text-white">{error}</p>
+    }
+    const likeButton = () => {
+        setIsLiked(true)
+        setFlag(true)
+        service.addLike({ postId: ele.id, userId: query.data?.userId!, type: 0 })
+            .then(res => toast({
+                title: "Successfully Liked!",
+                description: "Your Like as been saved! Thank you",
+                variant: 'default',
+            }))
+            .catch(err => toast({
+                title: "Failed to like",
+                description: err.message,
+                variant: 'destructive',
+            }))
+    }
+    const unLikeButton = () => {
+        setIsLiked(false)
+        setFlag(true)
+
+        service.removeLike({ postId: ele.id, userId: query.data?.userId!, type: 0 })
+            .then(res => toast({
+                title: "Successfully Removed the Like!",
+                description: "Your Like as been Removed! Thank you",
+                variant: 'default',
+            }))
+            .catch(err => toast({
+                title: "Failed to remove the like",
+                description: err.message,
+                variant: 'destructive',
+            }))
+
     }
 
     return (
@@ -53,10 +104,10 @@ function TextPostCard({ ele }: { ele: DocumentData }) {
                 />
             </div>
             <div className="mt-1 flex align-middle gap-2">
-                <div className="border border-white rounded-lg p-2 w-fit hover:bg-slate-800 flex gap-2">
-                    <ThumbsUp className="text-white h-4 w-4" />
+                <div className={`border ${isLiked ? 'bg-white text-black' : 'bg-transparent text-white'} border-white rounded-lg p-2 w-fit hover:bg-blue-400 flex gap-2`} onClick={isLiked ? unLikeButton : likeButton}>
+                    <ThumbsUp className=" h-4 w-4" />
                 </div>
-                <p className="text-md font-semibold py-2">{ele.likes}</p>
+                <p className="text-md font-semibold py-2">{likes}</p>
             </div>
 
         </div>

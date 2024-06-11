@@ -6,12 +6,32 @@ import { useEffect, useState } from "react"
 import ReactQuill from "react-quill"
 import { AspectRatio } from "../ui/aspect-ratio"
 import Skeleton from "react-loading-skeleton"
+import { toast } from "../ui/use-toast"
+import { trpc } from "@/app/_trpc/client"
 
 
 function MediaPostCard({ ele }: { ele: DocumentData }) {
     const [user, setUser] = useState<DocumentData[] | null>(null)
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
+    const [isLiked, setIsLiked] = useState(false)
+    const [flag, setFlag] = useState(false)
+    const query = trpc.getUser.useQuery()
+    const [likes, setLikes] = useState(ele.likes.length as number)
+    useEffect(() => {
+        if (flag) {
+            if (isLiked)
+                setLikes(prev => prev + 1)
+            else
+                setLikes(prev => prev - 1)
+        }
+    }, [isLiked])
+
+    useEffect(() => {
+        if (query.data) {
+            setIsLiked(ele.likes.includes(query.data.userId!))
+        }
+    }, [ele])
 
     useEffect(() => {
         service.getUser({ uId: ele.userId })
@@ -44,7 +64,38 @@ function MediaPostCard({ ele }: { ele: DocumentData }) {
     //     }
     // }, [ele]);
 
+    const likeButton = () => {
+        setIsLiked(true)
+        setFlag(true)
+        service.addLike({ postId: ele.id, userId: query.data?.userId!, type: 1 })
+            .then(res => toast({
+                title: "Successfully Liked!",
+                description: "Your Like as been saved! Thank you",
+                variant: 'default',
+            }))
+            .catch(err => toast({
+                title: "Failed to like",
+                description: err.message,
+                variant: 'destructive',
+            }))
+    }
+    const unLikeButton = () => {
+        setIsLiked(false)
+        setFlag(true)
 
+        service.removeLike({ postId: ele.id, userId: query.data?.userId!, type: 1 })
+            .then(res => toast({
+                title: "Successfully Removed the Like!",
+                description: "Your Like as been Removed! Thank you",
+                variant: 'default',
+            }))
+            .catch(err => toast({
+                title: "Failed to remove the like",
+                description: err.message,
+                variant: 'destructive',
+            }))
+
+    }
     return (
         <div className="w-full bg-slate-600 m-2 p-3 rounded-lg">
             <div className="flex justify-between">
@@ -92,12 +143,11 @@ function MediaPostCard({ ele }: { ele: DocumentData }) {
                 {/* </AspectRatio> */}
             </div>
             <div className="mt-1 flex align-middle gap-2">
-                <div className="border border-white rounded-lg p-2 w-fit hover:bg-slate-800 flex gap-2">
-                    <ThumbsUp className="text-white h-4 w-4" />
+                <div className={`border ${isLiked ? 'bg-white text-black' : 'bg-transparent text-white'} border-white rounded-lg p-2 w-fit hover:bg-blue-400 flex gap-2`} onClick={isLiked ? unLikeButton : likeButton}>
+                    <ThumbsUp className=" h-4 w-4" />
                 </div>
-                <p className="text-md font-semibold py-2">{ele.likes}</p>
+                <p className="text-md font-semibold py-2">{likes}</p>
             </div>
-
         </div>
     )
 }

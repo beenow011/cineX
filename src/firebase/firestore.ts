@@ -264,8 +264,9 @@ export class Services {
       try{
         if(title.length===0 && body.length===0)
           throw new Error('Title and Body field should not be empty')
+        const liked:string[] = []
         const docRef = await addDoc(collection(this.db, "textPost"),{
-            userId,roomName,roomId,title,body,likes:0,createdAt:Timestamp.fromDate(new Date())
+            userId,roomName,roomId,title,body,likes:liked,createdAt:Timestamp.fromDate(new Date())
         })
         
       return docRef; 
@@ -278,8 +279,9 @@ export class Services {
       try{
         if(title.length===0 && body.length===0 && files.length == 0)
           throw new Error('Title and Body field should not be empty')
+        const liked:string[] = []
         const docRef = await addDoc(collection(this.db, "mediaPost"),{
-            userId,roomName,roomId,title,body,likes:0,files,createdAt:Timestamp.fromDate(new Date())
+            userId,roomName,roomId,title,body,likes:liked,files,createdAt:Timestamp.fromDate(new Date())
         })
         
       return docRef; 
@@ -298,12 +300,13 @@ export class Services {
         if(pollOption.length===3 &&  pollOption[2].text.trim()===''){
           throw new Error('Options must not be empty!')
         }
+        const liked:string[] = []
         // const voted:votedParams[] = []
         const voters1:string[] = []
         const voters2:string[] = []
         const voters3:string[] = []
         const docRef = await addDoc(collection(this.db, "pollPost"),{
-            userId,roomName,roomId,title,question,likes:0,pollOption,createdAt:Timestamp.fromDate(new Date()),voters1,voters2,voters3
+            userId,roomName,roomId,title,question,likes:liked,pollOption,createdAt:Timestamp.fromDate(new Date()),voters1,voters2,voters3
         })
         
       return docRef; 
@@ -451,6 +454,59 @@ export class Services {
        
       } catch (err) {
         console.error(err);
+        throw err;
+      }
+    }
+
+    async addLike({postId,userId,type}:{postId:string,userId:string,type:number}){
+      try{
+        if(type === 0){
+          const userDocRef = doc(this.db, "textPost", postId);
+          return await updateDoc(userDocRef,{
+            likes:arrayUnion(userId)
+          })
+        }
+        if(type === 1){
+          const userDocRef = doc(this.db, "mediaPost", postId);
+          return await updateDoc(userDocRef,{
+            likes:arrayUnion(userId)
+          })
+        }
+        if(type === 2){
+          const userDocRef = doc(this.db, "pollPost", postId);
+          return await updateDoc(userDocRef,{
+            likes:arrayUnion(userId)
+          })
+        }
+
+      }catch(err){
+        console.log(err)
+        throw err;
+      }
+    }
+    async removeLike({postId,userId,type}:{postId:string,userId:string,type:number}){
+      try{
+        if(type === 0){
+          const userDocRef = doc(this.db, "textPost", postId);
+          return await updateDoc(userDocRef,{
+            likes:arrayRemove(userId)
+          })
+        }
+        if(type === 1){
+          const userDocRef = doc(this.db, "mediaPost", postId);
+          return await updateDoc(userDocRef,{
+            likes:arrayRemove(userId)
+          })
+        }
+        if(type === 2){
+          const userDocRef = doc(this.db, "pollPost", postId);
+          return await updateDoc(userDocRef,{
+            likes:arrayRemove(userId)
+          })
+        }
+
+      }catch(err){
+        console.log(err)
         throw err;
       }
     }
