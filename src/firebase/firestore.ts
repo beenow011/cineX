@@ -5,6 +5,7 @@ import { collection, addDoc, getDocs, doc, updateDoc , query, where ,limit } fro
 
 import conf from "./config";
 import { randomUUID } from "crypto";
+import { error } from "console";
 const currentDate = new Date();
 interface registerParams{
     uId: string
@@ -42,10 +43,13 @@ interface post2Params{
 }
 interface pollOptionParams {
   text: string,
-  count: number
 }
 interface post3Params{
   userId:string,roomName:string,title:string,question:string,roomId:string,pollOption:pollOptionParams[]
+}
+interface votedParams{
+  uId:string,
+  option:number
 }
 export class Services {
     app;
@@ -294,8 +298,12 @@ export class Services {
         if(pollOption.length===3 &&  pollOption[2].text.trim()===''){
           throw new Error('Options must not be empty!')
         }
+        // const voted:votedParams[] = []
+        const voters1:string[] = []
+        const voters2:string[] = []
+        const voters3:string[] = []
         const docRef = await addDoc(collection(this.db, "pollPost"),{
-            userId,roomName,roomId,title,question,likes:0,pollOption,createdAt:Timestamp.fromDate(new Date())
+            userId,roomName,roomId,title,question,likes:0,pollOption,createdAt:Timestamp.fromDate(new Date()),voters1,voters2,voters3
         })
         
       return docRef; 
@@ -357,7 +365,12 @@ export class Services {
         // console.log('Query snapshot:', querySnapshot);
     
         if (!querySnapshot.empty) {
-          const docs = querySnapshot.docs.map(doc => doc.data());
+          const docs = querySnapshot.docs.map(doc => {
+            return {
+                id: doc.id,
+                ...doc.data()
+            };
+        });
           // console.log('Retrieved documents:', docs);
           const userDoc = querySnapshot.docs[0];
           // console.log(userDoc.data());
@@ -387,7 +400,12 @@ export class Services {
         // console.log('Query snapshot:', querySnapshot);
     
         if (!querySnapshot.empty) {
-          const docs = querySnapshot.docs.map(doc => doc.data());
+          const docs = querySnapshot.docs.map(doc => {
+            return {
+                id: doc.id,
+                ...doc.data()
+            };
+        });
           // console.log('Retrieved documents:', docs);
           const userDoc = querySnapshot.docs[0];
           // console.log(userDoc.data());
@@ -398,6 +416,41 @@ export class Services {
         }
       } catch (err) {
         console.error('Error retrieving messages:', err);
+        throw err;
+      }
+    }
+
+    async addVote({ postId, userId, option }:{postId:string, userId:string, option:number}) {
+      try {
+        const userDocRef = doc(this.db, "pollPost", postId);
+    
+        const docSnap = await getDoc(userDocRef);
+        if (docSnap.exists()) {
+          console.log("Before update:", docSnap.data());
+        } else {
+          console.log("No such document!");
+          return;
+        }
+    
+        
+        if(option === 0){
+          return await updateDoc(userDocRef,{
+            voters1:arrayUnion(userId)
+          })
+        }
+        if(option === 1){
+          return await updateDoc(userDocRef,{
+            voters2:arrayUnion(userId)
+          })
+        }
+        if(option === 2){
+          return await updateDoc(userDocRef,{
+            voters3:arrayUnion(userId)
+          })
+        }
+       
+      } catch (err) {
+        console.error(err);
         throw err;
       }
     }

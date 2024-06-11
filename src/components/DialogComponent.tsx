@@ -31,8 +31,7 @@ import { trpc } from "@/app/_trpc/client";
 //     CardTitle,
 //   } from "@/components/ui/card"
 interface pollOptionParams {
-    text: string,
-    count: number
+    text: string
 }
 function DialogComponent() {
 
@@ -85,9 +84,9 @@ function DialogComponent() {
     }, []);
     useEffect(() => {
         if (optionExtend)
-            setPollOption([{ text: optionOne, count: 0 }, { text: optionTwo, count: 0 }, { text: optionThree, count: 0 }])
+            setPollOption([{ text: optionOne }, { text: optionTwo }, { text: optionThree }])
         else
-            setPollOption([{ text: optionOne, count: 0 }, { text: optionTwo, count: 0 }])
+            setPollOption([{ text: optionOne }, { text: optionTwo }])
     }, [optionOne, optionTwo, optionThree, optionExtend])
 
     const postText = () => {
