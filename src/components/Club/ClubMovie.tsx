@@ -6,6 +6,14 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 interface MovieResponse {
     Title: string;
     Poster: string;
+    Language: string;
+    Year: string;
+    Director: string;
+    Actors: string;
+    Genre: string;
+    Runtime: string;
+    imdbRating: string;
+    Plot: string
     // Add other expected fields here
 }
 
@@ -51,6 +59,29 @@ function ClubMovie({ movieID }: ClubMovieProps) {
                     <h1 className='text-lg font-semibold text-red-600'>
                         {res?.Title}
                     </h1>
+                    <div className="flex flex-col xl:flex-row">
+
+                        <div className="bg-slate-700/70   p-3 m-3 mt-8">
+                            <div className="">
+                                <div className="px-2 ">
+
+                                    <div className="flex gap-2 ">
+                                        <p className="text-cyan-600">{res?.Language}</p>
+                                        <p className="text-slate-400">{res?.Year}</p>
+                                    </div>
+                                    <p className='text-slate-300'>Director : {res?.Director}</p>
+                                    <p className='text-slate-300'>Actors : {res?.Actors}</p>
+                                    <p className='text-slate-300'>Genre : {res?.Genre}</p>
+                                    <p className='text-slate-300'>Runtime : {res?.Runtime}</p>
+                                    <p className='text-slate-300'>imdbRating : {res?.imdbRating}</p>
+
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
             )}
         </div>
