@@ -16,7 +16,7 @@ function Dashboard({ name, user }: { name: string | null | undefined, user: stri
     const router = useRouter()
     useEffect(() => {
         if (user) {
-            service.getYourRooms({ user }).then(res => setCreatedClubs(res)).catch(err => console.log(err))
+            service.exploreRooms({ limit: 10 }).then(res => setCreatedClubs(res)).catch(err => console.log(err))
         }
 
     }, [])

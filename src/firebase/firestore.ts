@@ -210,6 +210,7 @@ export class Services {
       }
     }
       
+    
     async getYourRooms({user}:{user:string}){
       try{
         let baseQuery = query(
@@ -237,7 +238,32 @@ export class Services {
         throw err;
       }
     }
-
+    async exploreRooms({limit}:{limit:number}){
+      try{
+        let baseQuery = query(
+          collection(this.db, "room")
+        );
+        const querySnapshot = await getDocs(baseQuery);
+        if (!querySnapshot.empty) {
+          console.log(querySnapshot)
+          const docs = querySnapshot.docs.map(doc => {
+            return {
+                id: doc.id,
+                ...doc.data()
+            };
+        });
+          console.log('Retrieved documents:', docs);
+          const userDoc = querySnapshot.docs[0];
+          // console.log(userDoc.data());
+          return docs;
+        } else {
+          console.log('No documents found');
+          return null;
+        }
+      }catch(err){
+        throw err;
+      }
+    }
     async joinClub({userId , roomId}:{userId:string , roomId:string}){
       try{
         const userDocRef = doc(this.db, "room", roomId);

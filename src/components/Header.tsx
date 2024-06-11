@@ -5,6 +5,7 @@ import { Button } from "./ui/button";
 import { usePathname, useRouter } from "next/navigation";
 import { Menu, PlusCircle } from "lucide-react";
 import { useEffect, useState } from "react";
+import { NavbarDemo } from "./SIgnInHeader";
 export const Header = () => {
     const [menu, setMenu] = useState(false)
     const pathname = usePathname()
@@ -19,7 +20,7 @@ export const Header = () => {
             <div className="flex-1">
                 <h1 className="text-red-700 p-6  font-semibold font-mono text-xl md:text-4xl cursor-pointer"><Link href={'/'}>Cine<span className="text-xl md:text-4xl font-mono text-cyan-600">verse</span></Link></h1>
             </div>
-            <div className="md:flex gap-6  m-6 flex-2 hidden ">
+            <div className="lg:flex gap-6  m-6 flex-2 hidden ">
                 <SignedOut>
 
                     <Button onClick={() => router.push('/sign-in')}>
@@ -32,18 +33,19 @@ export const Header = () => {
 
                 </SignedOut>
                 <SignedIn>
-                    {
+                    {/* {
                         pathname !== '/create-club' && <Button onClick={() => router.push('/create-club')}><PlusCircle className="h-7 w-7 bg-red-600" /> <p className="font-semibold ml-2">Club</p></Button>
                     }
                     {pathname !== '/dashboard' && <Button >
                         <p className="font-semibold"><Link href={'/dashboard'}>Dashboard</Link></p>
                     </Button>}
 
-                    <UserButton afterSignOutUrl="/" />
+                    <UserButton afterSignOutUrl="/" /> */}
+                    <NavbarDemo />
                 </SignedIn>
 
             </div>
-            <div className="md:hidden relative mr-5 flex gap-4 z-[99]">
+            <div className="lg:hidden relative mr-5 flex gap-4 z-[99]">
                 <SignedIn>
                     <UserButton afterSignOutUrl="/" />
                 </SignedIn>
