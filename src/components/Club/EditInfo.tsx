@@ -93,7 +93,7 @@ export const EditInfo = ({ club, roomId }: { club: DocumentData, roomId: string 
                 </div>
 
             </div>
-            <div className="flex gap-4">
+            <div className="flex md:flex-row flex-col gap-4">
                 <div className="  mt-3">
                     <Avatar className="h-16 w-16 md:h-48 md:w-48 ">
 
