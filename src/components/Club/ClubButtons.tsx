@@ -2,28 +2,35 @@
 import { Loader2, Plus, Share } from "lucide-react"
 import { Button, buttonVariants } from "../ui/button"
 import service from "@/firebase/firestore"
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import DialogComponent from "../DialogComponent";
 import { CldUploadButton } from "next-cloudinary";
 import { useRouter } from "next/navigation";
 
 
-function ClubButtons({ members, alreadyMember, userId, roomId, admin, join, leave, loading, roomName }: { members: number, alreadyMember: boolean, userId: string, roomId: string, admin: string, join: () => void, leave: () => void, loading: boolean, roomName: string }) {
-    // console.log(userId, roomId)
-    // const [loading, setLoading] = useState(false)
-    // const joinRoom = () => {
-    //     setLoading(true)
-    //     service.joinClub({ userId, roomId }).then(res => console.log(res)).catch(err => console.log(err)).finally(() => setLoading(false))
-    // }
-    // const leaveRoom = () => {
-    //     setLoading(true)
-    //     service.leaveCLub({ userId, roomId }).then(res => console.log(res)).catch(err => console.log(err)).finally(() => setLoading(false))
-    // }
+function ClubButtons({ members, alreadyMember, userId, roomId, admin, roomName }: { members: number, alreadyMember: boolean, userId: string, roomId: string, admin: string, roomName: string }) {
+    console.log(userId, roomId)
+    const [loading, setLoading] = useState(false)
+    const [joined, setJoined] = useState(alreadyMember)
+    const [flag, setFlag] = useState(false)
+    const joinRoom = () => {
+        setFlag(true)
+        setJoined(true)
+        setLoading(true)
+        service.joinClub({ userId, roomId }).then(res => console.log(res)).catch(err => console.log(err)).finally(() => setLoading(false))
+    }
+    const leaveRoom = () => {
+        setFlag(true)
+        setJoined(false)
+        setLoading(true)
+        service.leaveCLub({ userId, roomId }).then(res => console.log(res)).catch(err => console.log(err)).finally(() => setLoading(false))
+    }
     const handleUpload = useCallback(async (result: any) => {
         console.log(result);
         // setIcon(result.info.url)
     }, []);
+
     const router = useRouter()
     return (
         <div className="w-full bg-slate-700/50  rounded-lg flex justify-between gap-3 p-2">
@@ -37,8 +44,8 @@ function ClubButtons({ members, alreadyMember, userId, roomId, admin, join, leav
 
                         </Button>
                     ) : (
-                        alreadyMember ? (
-                            <Button onClick={leave}>
+                        joined ? (
+                            <Button onClick={leaveRoom}>
                                 {loading ? (<Loader2 className="h-4 w-4 text-white animate-spin" />) : (
 
                                     <p className=" antialiased font-semibold">Leave</p>)
@@ -46,7 +53,7 @@ function ClubButtons({ members, alreadyMember, userId, roomId, admin, join, leav
 
                             </Button>
                         ) : (
-                            <Button onClick={join}>
+                            <Button onClick={joinRoom}>
                                 {loading ? (<Loader2 className="h-4 w-4 text-white animate-spin" />) : (
 
                                     <p className=" antialiased font-semibold">Join</p>)
@@ -57,7 +64,7 @@ function ClubButtons({ members, alreadyMember, userId, roomId, admin, join, leav
                 }
 
                 <div className="p-2 md:flex hidden ">
-                    <p className="text-red-600  md:font-bold">Members:    <span className="text-cyan-600">{members}</span></p>
+                    <p className="text-red-600  md:font-bold">Members:    <span className="text-cyan-600">{members + (joined && flag ? 1 : 0)}</span></p>
                 </div>
             </div>
             <div className="flex gap-2">

@@ -1,4 +1,5 @@
-import Dashboard from "@/components/Dashboard";
+
+import Explore from "@/components/ExploreClubs";
 import { Features } from "@/components/FeatureList";
 import { currentUser } from "@clerk/nextjs/server";
 
@@ -7,7 +8,7 @@ export default async function Page() {
 
     return (
         <div>
-            <Dashboard name={user?.username} user={user?.id} />
+            <Explore name={user?.username} user={user?.id} />
         </div>
     )
 }

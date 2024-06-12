@@ -7,7 +7,7 @@ import { UserButton } from "@clerk/nextjs";
 export function NavbarDemo() {
     return (
         <div className="relative w-full flex items-center justify-center">
-            <Navbar className="top-2 " />
+            <Navbar className="top-8 " />
             <UserButton afterSignOutUrl="/" />
 
         </div>
@@ -18,7 +18,7 @@ function Navbar({ className }: { className?: string }) {
     const [active, setActive] = useState<string | null>(null);
     return (
         <div
-            className={cn("fixed top-16 inset-x-0 max-w-2xl mx-auto z-[100]", className)}
+            className={cn("fixed top-32 inset-x-0 max-w-2xl mx-auto z-[100]", className)}
         >
             <Menu setActive={setActive}>
                 <MenuItem setActive={setActive} active={active} item="Recommendations">

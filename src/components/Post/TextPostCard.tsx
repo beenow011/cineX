@@ -2,11 +2,12 @@ import service from "@/firebase/firestore"
 import { DocumentData } from "firebase/firestore"
 import { useEffect, useState } from "react"
 import parse from "html-react-parser"
-import { MoveUp, ThumbsUp } from "lucide-react"
+import { MoveUp, ThumbsUp, TriangleAlert } from "lucide-react"
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { trpc } from "@/app/_trpc/client"
 import { toast } from "../ui/use-toast"
+import Skeleton from "react-loading-skeleton"
 function TextPostCard({ ele }: { ele: DocumentData }) {
     const [user, setUser] = useState<DocumentData[] | null>(null)
     const [loading, setLoading] = useState<boolean>(true)
@@ -43,11 +44,21 @@ function TextPostCard({ ele }: { ele: DocumentData }) {
     }, [ele])
 
     if (loading) {
-        return <p className="text-white">Loading...</p>
+        return (
+            <div>
+                <Skeleton className="w-full h-32" />
+            </div>
+        )
     }
 
     if (error) {
-        return <p className="text-white">{error}</p>
+        return <div className='bg-slate-600/30 w-full h-36 flex flex-col justify-center items-center'>
+            <TriangleAlert className='h-5 w-5 text-white' />
+            <p className='font-semibold'>Error Loading the posts!</p>
+
+            <div>Reload the page or try again later.</div>
+
+        </div>
     }
     const likeButton = () => {
         setIsLiked(true)

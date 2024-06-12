@@ -1,6 +1,6 @@
 import service from "@/firebase/firestore"
 import { DocumentData } from "firebase/firestore"
-import { ThumbsUp } from "lucide-react"
+import { SquareX, ThumbsUp, TriangleAlert } from "lucide-react"
 import Image from "next/image"
 import { useEffect, useState } from "react"
 import ReactQuill from "react-quill"
@@ -8,6 +8,7 @@ import { AspectRatio } from "../ui/aspect-ratio"
 import Skeleton from "react-loading-skeleton"
 import { toast } from "../ui/use-toast"
 import { trpc } from "@/app/_trpc/client"
+import Link from "next/link"
 
 
 function MediaPostCard({ ele }: { ele: DocumentData }) {
@@ -47,11 +48,21 @@ function MediaPostCard({ ele }: { ele: DocumentData }) {
     }, [ele])
 
     if (loading) {
-        return <p className="text-white">Loading...</p>
+        return (
+            <div>
+                <Skeleton className="w-full h-32" />
+            </div>
+        )
     }
 
     if (error) {
-        return <p className="text-white">{error}</p>
+        return <div className='bg-slate-600/30 w-full h-36 flex flex-col justify-center items-center'>
+            <TriangleAlert className='h-5 w-5 text-white' />
+            <p className='font-semibold'>Error Loading the posts!</p>
+
+            <div>Reload the page or try again later.</div>
+
+        </div>
     }
 
     // useEffect(() => {
