@@ -33,7 +33,7 @@ export default function Page() {
         <div>
             <MaxWidthWrapper className="px-0 mx-auto mt-5 max-w-7xl md:p-8">
                 {club && (
-                    <EditInfo club={club} />
+                    <EditInfo club={club} roomId={roomId} />
 
                 )}
             </MaxWidthWrapper>

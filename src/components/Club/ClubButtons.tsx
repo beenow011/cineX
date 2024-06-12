@@ -37,7 +37,7 @@ function ClubButtons({ members, alreadyMember, userId, roomId, admin, roomName }
             <div className="flex gap-3">
                 {
                     admin === userId ? (
-                        <Button >
+                        <Button onClick={(() => router.push(`/edit-page/${roomId}`))}>
 
 
                             <p className=" antialiased font-semibold">Edit</p>
@@ -72,7 +72,7 @@ function ClubButtons({ members, alreadyMember, userId, roomId, admin, roomName }
                     <Plus className="h-6 w-6 text-cyan-600" /> <p className="text-cyan-600 antialiased font-semibold">Post</p>
                 </Button> */}
 
-                <Button variant="outline"><Plus className="h-6 w-6 text-cyan-600" onClick={() => router.push(`/create-post/${roomId}`)} /> <p className="text-cyan-600 antialiased font-semibold" >Post</p></Button>
+                <Button variant="outline" onClick={() => router.push(`/create-post/${roomId}`)} ><Plus className="h-6 w-6 text-cyan-600" /> <p className="text-cyan-600 antialiased font-semibold" >Post</p></Button>
 
                 <Button variant={'ghost'}>
                     <Share className="h-6 w-6 text-cyan-600" /> <p className="text-cyan-600 antialiased font-semibold">Share</p>

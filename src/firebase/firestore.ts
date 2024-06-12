@@ -194,6 +194,18 @@ export class Services {
         }
       }
 
+      async editRoom({roomId,description,icon,banner}:{roomId:string,description:string,icon:string,banner:string}){
+        try{
+          const docRef = doc(collection(this.db, 'room'), roomId);
+          return await updateDoc(docRef, {
+            description,icon,banner
+        });
+ 
+        }catch(err){
+          throw err
+        }
+      }
+
     async retrieveRoom({roomID}:{roomID:string}){
       try{
         const docRef = doc(collection(this.db, 'room'), roomID);
