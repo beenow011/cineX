@@ -1,4 +1,4 @@
-import { Loader2Icon } from "lucide-react"
+import { Film, Loader2Icon } from "lucide-react"
 import { boolean } from "zod"
 import { MovieInfo } from "./MovieInfo"
 import { Button } from "./ui/button"
@@ -22,7 +22,7 @@ export const MovieCard = ({ res, loading, flag, className }: params) => {
 
         <div>
 
-            <div className={cn("mx-2.5 w-full  bg-zinc-900 mt-5 p-3 rounded-md   shadow-white/30", className)}>
+            <div className={cn("mx-2.5 w-full bg-gradient-to-r from-black  to-slate-900  m-3 rounded-md py-5 shadow-slate-700", className)}>
                 {
 
                     loading ? (
@@ -33,8 +33,9 @@ export const MovieCard = ({ res, loading, flag, className }: params) => {
 
                         Object.keys(res).length === 0 ? (
                             flag ? (
-                                <div className="text-white">
+                                <div className="text-white w-full flex flex-col justify-center items-center">
                                     Search your fav movie by IMDB id or Movie name
+                                    <Film className="h-8 w-8 mt-2 text-white" />
                                 </div>) : null
 
                         )

@@ -25,6 +25,8 @@ interface contextParams {
     msgFlag: boolean
     setMsg: Dispatch<SetStateAction<string>>
     setFlag: Dispatch<SetStateAction<boolean>>
+    result: any
+    loadingRes: boolean
 
 }
 export const MovieContext = createContext<contextParams>({
@@ -43,6 +45,8 @@ export const MovieContext = createContext<contextParams>({
     addMsg: () => { },
     res: {},
     res2: {},
+    loadingRes: false,
+    result: [{}],
     setFlag: () => { }
 });
 
@@ -51,6 +55,7 @@ export const MovieProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const [flag, setFlag] = useState<boolean>(false);
     const [movie, setMovie] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
+    const [loadingRes, setLoadingRes] = useState<boolean>(false);
     const [res, setRes] = useState<any>({});
     const [res2, setRes2] = useState<any>({});
     const [answer, setAnswer] = useState('')
@@ -83,7 +88,7 @@ export const MovieProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     //     setRes({})
     // }, [movie, imdbId])
 
-    const searchForSimilarMovies = async ({ Title, imdbID, Language }: { Title: string, imdbID: string, Language: string }) => {
+    const searchForSimilarMovies = async ({ Title, imdbID, Language, Plot }: { Title: string, imdbID: string, Language: string, Plot: string }) => {
         try {
             // console.log("1", Title, imdbID)
             const requestBody = {
@@ -91,7 +96,7 @@ export const MovieProvider: React.FC<{ children: React.ReactNode }> = ({ childre
                 imdbID: imdbID
             };
             // Making a GET request with query parameters
-            const response = await fetch(`/api/fav-movies?Title=${encodeURIComponent(Title)}&imdbID=${encodeURIComponent(imdbID)}&Language=${encodeURIComponent(Language)}`, {
+            const response = await fetch(`/api/fav-movies?Title=${encodeURIComponent(Title)}&imdbID=${encodeURIComponent(imdbID)}&Plot=${encodeURIComponent(Plot)}&Language=${encodeURIComponent(Language)}`, {
                 method: 'GET'
             });
 
@@ -128,13 +133,52 @@ export const MovieProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
     // console.log(Language)
 
+    // const searchSimilarMovies = () => {
+    //     if (res && res.Title && res.imdbID) {
+    //         const Language = res?.Language.split(',')
+    //         searchForSimilarMovies({ Title: res.Title as string, imdbID: res.imdbID as string, Language: Language[0] as string }).then(async (res) => {
+    //             const reader = res?.body?.pipeThrough(new TextDecoderStream()).getReader();
+    //             let resptext = "";
+    //             // console.log(reader)
+    //             while (true) {
+
+    //                 const { value, done } = await reader?.read()!;
+
+    //                 if (done) {
+
+    //                     break;
+
+    //                 }
+
+    //                 resptext += value;
+
+    //                 // setAnswer(resptext);
+
+    //             }
+    //             setAnswer(getImdbID(resptext))
+    //             searchFromApiById2({ imdbId: answer })
+    //             // console.log("Movie", res?.url)
+    //         }
+
+
+    //         )
+    //     }
+    // }
+    const [result, setResult] = useState<any>([])
+    // const [loadingMovies,setLoadingMOv]
+    useEffect(() => {
+        setResult([])
+    }, [movie, imdbId])
     const searchSimilarMovies = () => {
         if (res && res.Title && res.imdbID) {
             const Language = res?.Language.split(',')
-            searchForSimilarMovies({ Title: res.Title as string, imdbID: res.imdbID as string, Language: Language[0] as string }).then(async (res) => {
+            setLoadingRes(true)
+            searchForSimilarMovies({ Title: res.Title as string, imdbID: res.imdbID as string, Language: Language[0] as string, Plot: res.Plot as string }).then(async (res) => {
+
+                // setAnswer(getImdbID(resptext))
+                // searchFromApiById2({ imdbId: answer })
                 const reader = res?.body?.pipeThrough(new TextDecoderStream()).getReader();
                 let resptext = "";
-                // console.log(reader)
                 while (true) {
 
                     const { value, done } = await reader?.read()!;
@@ -150,16 +194,23 @@ export const MovieProvider: React.FC<{ children: React.ReactNode }> = ({ childre
                     // setAnswer(resptext);
 
                 }
-                setAnswer(getImdbID(resptext))
-                searchFromApiById2({ imdbId: answer })
-                // console.log("Movie", res?.url)
+                const jsonResponse = JSON.parse(resptext!);
+                // console.log(jsonResponse);
+                setResult(jsonResponse.result)
+                // console.log("Movie", jsonResponse)
             }
 
 
-            )
+            ).catch(err =>
+                toast({
+                    title: "Something went wrong!",
+                    description: err.message,
+                    variant: 'destructive',
+                })
+            ).finally(() => setLoadingRes(false))
         }
     }
-
+    console.log(result)
     const getImdbID = (answer: string) => {
 
         const cleanedString = answer
@@ -289,7 +340,7 @@ export const MovieProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
     return (
 
-        <MovieContext.Provider value={{ imdbId, setImdbId, searchSimilarMovies, movie, setMovie, msgFlag: flag, searchMovieByID, loading, loading2, addMsg, searchMovieByName, res, res2, msg, setMsg, setFlag }}>
+        <MovieContext.Provider value={{ imdbId, setImdbId, result, searchSimilarMovies, movie, setMovie, loadingRes, msgFlag: flag, searchMovieByID, loading, loading2, addMsg, searchMovieByName, res, res2, msg, setMsg, setFlag }}>
             {children}
 
         </MovieContext.Provider>

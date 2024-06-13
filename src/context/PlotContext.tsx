@@ -9,6 +9,7 @@ interface contextParams {
     answer: string
     loading: boolean
     res: any
+    result: any
 }
 
 export const PlotContext = createContext<contextParams>({
@@ -17,7 +18,8 @@ export const PlotContext = createContext<contextParams>({
     searchPlot: () => { },
     answer: '',
     loading: false,
-    res: {}
+    res: {},
+    result: [{}],
 })
 
 export const PlotProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -33,6 +35,9 @@ export const PlotProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
     }
     )
+    useEffect(() => {
+        setResult([])
+    }, [Plot])
 
     const getImdbID = (answer: string) => {
 
@@ -49,6 +54,8 @@ export const PlotProvider: React.FC<{ children: React.ReactNode }> = ({ children
         console.log("2", similarMovieId)
         return similarMovieId
     }
+    const [result, setResult] = useState<any>([])
+
     const searchPlot = async () => {
         try {
             setLoading(true)
@@ -61,10 +68,8 @@ export const PlotProvider: React.FC<{ children: React.ReactNode }> = ({ children
                     throw new Error('Failed to  retrive the movie!')
                 }
                 console.log("res", response)
-
                 const reader = response?.body?.pipeThrough(new TextDecoderStream()).getReader();
                 let resptext = "";
-                // console.log(reader)
                 while (true) {
 
                     const { value, done } = await reader?.read()!;
@@ -80,12 +85,17 @@ export const PlotProvider: React.FC<{ children: React.ReactNode }> = ({ children
                     // setAnswer(resptext);
 
                 }
-                setAnswer(getImdbID(resptext))
-                //  searchFromApiById2({ imdbId: answer })
+                const jsonResponse = JSON.parse(resptext!);
+                // console.log(jsonResponse);
+                setResult(jsonResponse.result)
+                // console.log("Movie", jsonResponse)
             }
-            // console.log("answer", answer)
 
-        } catch (err) {
+            //  searchFromApiById2({ imdbId: answer })
+        }
+        // console.log("answer", answer)
+
+        catch (err) {
             console.log("ERROR:", err)
         }
         finally {
@@ -105,7 +115,7 @@ export const PlotProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }, [answer])
     return (
 
-        <PlotContext.Provider value={{ Plot, setPlot, searchPlot, answer, loading, res }}>
+        <PlotContext.Provider value={{ Plot, setPlot, searchPlot, answer, loading, res, result }}>
             {children}
 
         </PlotContext.Provider>

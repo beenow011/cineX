@@ -2,6 +2,7 @@ import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import { MovieFound } from "@/components/MovieFound";
 import { MovieInput } from "@/components/MovieInput";
 import { MovieRes } from "@/components/MovieRes";
+import RecmMovies from "@/components/RecmMovies";
 import { Button } from "@/components/ui/button";
 import { MovieContext, MovieProvider } from "@/context/MovieContext";
 import { useContext } from "react";
@@ -20,7 +21,8 @@ export default function Page() {
                     <MovieInput className="" />
 
                     <MovieRes />
-                    <MovieFound />
+                    {/* <MovieFound /> */}
+                    <RecmMovies />
                 </MaxWidthWrapper>
             </MovieProvider>
         </div>)

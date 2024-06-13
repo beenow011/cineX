@@ -11,7 +11,7 @@ export const MovieInput = ({ className = '' }: { className: string }) => {
     // const [imdbId, setImdbId] = useState<string>('')
     // const [trigger, setTrigger] = useState(false)
     // const [movie, setMovie] = useState<string>('')
-    const { setImdbId, setMovie, searchMovieByID, loading: isLoading, searchMovieByName } = useContext(MovieContext)
+    const { setImdbId, setMovie, searchMovieByID, loading: isLoading, searchMovieByName, movie, imdbId } = useContext(MovieContext)
     // Fetch movie data using the provided IMDb ID
 
 
