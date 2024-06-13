@@ -64,19 +64,19 @@ export class Services {
         try {
             const q = query(collection(this.db, "users"), where("uId", "==", uId));
             const querySnapshot = await getDocs(q);
-            console.log(querySnapshot)
+            // console.log(querySnapshot)
             
             if (!querySnapshot.empty) {
                 // User already exists, return their details
-                console.log(true)
+                // console.log(true)
                 const userDoc = querySnapshot.docs[0];
                 return userDoc.data(); // Returning existing user details
             } else {
                 // User does not exist, add the new user details
-                console.log(false)
+                // console.log(false)
 
                 const docRef = await addDoc(collection(this.db, "users"), {
-                    uId, email, username, createdAt
+                    uId, email, username, createdAt,joined:[]
                 });
                 
                 return docRef; // Returning the newly added user details
@@ -276,12 +276,64 @@ export class Services {
         throw err;
       }
     }
+
+    async getJoinedRooms({ userId }:{userId:string}) {
+      try {
+        const baseQuery = query(
+          collection(this.db, 'users'),
+          where('uId', '==', userId)
+        );
+  
+        const querySnapshot = await getDocs(baseQuery);
+        const docs = querySnapshot.docs.map(doc => doc.data());
+  
+        if (docs[0]?.joined?.length > 0) {
+          const roomDocsPromises = docs[0].joined.map(async (roomID:string) => {
+            return await this.retrieveRoom({ roomID });
+          });
+  
+          const roomDocs = await Promise.all(roomDocsPromises);
+          return roomDocs;
+        } else {
+          return [];
+        }
+      } catch (err) {
+        throw err;
+      }
+    }
     async joinClub({userId , roomId}:{userId:string , roomId:string}){
       try{
         const userDocRef = doc(this.db, "room", roomId);
-            return await updateDoc(userDocRef, {
+         const room =  await updateDoc(userDocRef, {
                 users: arrayUnion(userId)
             });
+
+            const q = query(
+              collection(this.db, "users"),
+              where("uId", "==", userId)
+            );
+        
+          
+            const querySnapshot = await getDocs(q);
+        
+            querySnapshot.forEach(async (doc) => {
+              const docRef = doc.ref;
+              const docData = doc.data();
+      if (docData.joined) {
+        
+        await updateDoc(docRef, {
+          joined: arrayUnion(roomId)
+        });
+      } else {
+        await updateDoc(docRef, {
+          joined: [roomId]
+        });
+      }
+            });
+
+
+            return
+
       }catch(err){
         console.log(err)
       }
@@ -293,6 +345,20 @@ export class Services {
         await updateDoc(userDocRef, {
           users: arrayRemove(userId)
       });
+      const q = query(
+        collection(this.db, "users"),
+        where("uId", "==", userId)
+      );
+  
+      const querySnapshot = await getDocs(q);
+  
+      querySnapshot.forEach(async (doc) => {
+        const docRef = doc.ref;
+        await updateDoc(docRef, {
+          joined: arrayRemove(roomId)
+        });
+      });
+  
       }catch(err){
         console.log(err)
       }

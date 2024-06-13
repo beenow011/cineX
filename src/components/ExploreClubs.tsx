@@ -53,7 +53,7 @@ function Explore({ name, user }: { name: string | null | undefined, user: string
 
                     </ul>
 
-                    <div className="bg-slate-600/40 w-full flex justify-center items-center text-cyan-600 p-2 hover:bg-zinc-900 transition font-bold cursor-pointer">See all your clubs</div>
+
                 </div>
             </div>
         </MaxWidthWrapper>

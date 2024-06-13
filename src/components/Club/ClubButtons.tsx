@@ -10,10 +10,14 @@ import { useRouter } from "next/navigation";
 
 
 function ClubButtons({ members, alreadyMember, userId, roomId, admin, roomName }: { members: number, alreadyMember: boolean, userId: string, roomId: string, admin: string, roomName: string }) {
-    console.log(userId, roomId)
+    // console.log(userId, roomId)
     const [loading, setLoading] = useState(false)
     const [joined, setJoined] = useState(alreadyMember)
+    console.log('already member', alreadyMember, joined)
     const [flag, setFlag] = useState(false)
+    useEffect(() => {
+        setJoined(alreadyMember)
+    }, [alreadyMember])
     const joinRoom = () => {
         setFlag(true)
         setJoined(true)
@@ -30,7 +34,6 @@ function ClubButtons({ members, alreadyMember, userId, roomId, admin, roomName }
         console.log(result);
         // setIcon(result.info.url)
     }, []);
-
     const router = useRouter()
     return (
         <div className="w-full bg-slate-700/50  rounded-lg flex justify-between gap-3 p-2">

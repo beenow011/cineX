@@ -18,8 +18,8 @@ const Page = () => {
 
     const { mutate: register } = trpc.registerToFirestore.useMutation({
         onSuccess: (data) => {
-            console.log(data)
-            router.push('/dashboard')
+            // console.log(data)
+            router.push(origin ? `/${origin}` : '/dashboard');
         },
         onError: (error) => {
             if (error?.data?.code === 'UNAUTHORIZED') {
