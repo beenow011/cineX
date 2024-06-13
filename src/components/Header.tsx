@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Menu, PlusCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { NavbarDemo } from "./SIgnInHeader";
+import Image from "next/image";
 export const Header = () => {
     const [menu, setMenu] = useState(false)
     const pathname = usePathname()
@@ -17,7 +18,8 @@ export const Header = () => {
 
     return (
         <div className=" flex justify-between items-center">
-            <div className="flex-1">
+            <div className="flex-1 flex gap-2">
+
                 <h1 className="text-red-700 p-6  font-semibold font-mono text-xl md:text-4xl cursor-pointer"><Link href={'/'}>Cine<span className="text-xl md:text-4xl font-mono text-cyan-600">verse</span></Link></h1>
             </div>
             <div className="lg:flex gap-6  m-6 flex-2 hidden ">

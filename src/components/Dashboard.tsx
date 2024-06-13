@@ -25,7 +25,7 @@ function Dashboard({ name, user }: { name: string | null | undefined, user: stri
 
         <MaxWidthWrapper className="px-0 mx-auto mt-5 max-w-[90rem] md:p-10">
             <div>
-                <div className="w-full bg-zinc-900 border rounded-md border-white/30 p-4">
+                <div className="w-full bg-gradient-to-r from-black  to-slate-900 shadow-xl m-3 rounded-md py-5 shadow-slate-700 p-4">
                     <h1 className="text-white text-xl font-bold">
                         Welcome {name}.!
                     </h1>
@@ -41,8 +41,7 @@ function Dashboard({ name, user }: { name: string | null | undefined, user: stri
                         {
                             createdClubs && (
                                 createdClubs
-                                    .sort((a, b) => b.createdAt.seconds - a.createdAt.seconds)
-                                    .slice(0, 5)  // Select only the first 5 elements
+                                    .sort((a, b) => b.createdAt.seconds - a.createdAt.seconds) // Select only the first 5 elements
                                     .map((ele, i) => (
                                         <li key={i} className="">
                                             <ClubCard
@@ -60,7 +59,7 @@ function Dashboard({ name, user }: { name: string | null | undefined, user: stri
 
                     </ul>
 
-                    <div className="bg-slate-600/40 w-full flex justify-center items-center text-cyan-600 p-2 hover:bg-zinc-900 transition font-bold cursor-pointer">See all your clubs</div>
+
                 </div>
             </div>
         </MaxWidthWrapper>

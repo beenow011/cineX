@@ -26,7 +26,7 @@ export const PlotResult = () => {
     // }, [answer])
 
     return (
-        <div className="bg-gradient-to-r from-black  to-slate-900 shadow-xl m-3 rounded-md py-5 shadow-slate-700">
+        <div className="bg-gradient-to-r from-black  to-slate-900 shadow-xl m-3 rounded-md p-5 shadow-slate-700">
 
             {!loading && result.length === 0 ? (<div className="w-full h-full flex flex-col justify-center items-center">
                 <FilmIcon className="h-12 w-12 mb-3 text-white" />
