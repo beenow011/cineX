@@ -13,7 +13,7 @@ function PollPost({ roomId }: { roomId: string }) {
         <div className="mt-3">
             <ul>
                 {
-                    posts ? (
+                    posts && posts.length > 0 ? (
                         posts.map((ele, i) => (
                             <li key={i}>
                                 <PollPostCard ele={ele} />

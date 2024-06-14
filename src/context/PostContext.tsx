@@ -49,14 +49,16 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({ children
                     const textPostsWithType = textRes?.map(post => ({ ...post, type: 'text' }));
                     const mediaPostsWithType = mediaRes?.map(post => ({ ...post, type: 'media' }));
                     const pollPostsWithType = pollRes?.map(post => ({ ...post, type: 'poll' }));
+                    if (textPostsWithType && mediaPostsWithType && pollPostsWithType) {
+                        const allPosts = [...textPostsWithType, ...mediaPostsWithType, ...pollPostsWithType];
 
-                    const allPosts = [...textPostsWithType!, ...mediaPostsWithType!, ...pollPostsWithType!];
-
-
+                        setMixedPosts(allPosts);
+                    } else {
+                        setMixedPosts([]);
+                    }
                     setTextPost(textPostsWithType || []);
                     setMediaPost(mediaPostsWithType || []);
                     setPollPost(pollPostsWithType || []);
-                    setMixedPosts(allPosts);
                     setError(null); // Clear any previous error
                 }
             }

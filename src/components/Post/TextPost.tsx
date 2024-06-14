@@ -12,7 +12,7 @@ function TextPost({ roomId }: { roomId: string }) {
         <div className="mt-3">
             <ul>
                 {
-                    posts ? (
+                    posts && posts.length > 0 ? (
                         posts.map(ele => (
                             <li key={ele.id}>
                                 <TextPostCard ele={ele} />

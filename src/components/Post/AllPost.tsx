@@ -9,11 +9,12 @@ import PollPostCard from "./PollPostCard";
 
 function AllPost({ roomId }: { roomId: string }) {
     const { mixedPost: posts } = useContext(PostConext)
+    console.log(posts)
     return (
         <div className="mt-3">
             <ul>
                 {
-                    posts ? (
+                    posts && posts.length > 0 ? (
                         posts.sort((a, b) => b.createdAt.seconds - a.createdAt.seconds).map(ele => (
                             <li key={ele.id}>
                                 {

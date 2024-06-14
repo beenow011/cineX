@@ -104,7 +104,7 @@ function ClubPage({ club, roomId, loadingMain }: { club: DocumentData | undefine
                                 {
                                     strings && strings[0]
                                 }/<span className="font-bold text-cyan-600 text-2xl">{strings && strings[1]}</span></p>
-                            <p className="text-white truncate text-wrap   ">
+                            <p className="text-white truncate text-wrap font-normal  ">
                                 {club?.description}
 
                             </p>
