@@ -13,6 +13,7 @@ import { trpc } from "@/app/_trpc/client";
 import service from "@/firebase/firestore";
 import Skeleton from "react-loading-skeleton";
 import { Skeleton as Skel } from "../ui/skeleton";
+import { PostProvider } from "@/context/PostContext";
 
 
 
@@ -115,7 +116,9 @@ function ClubPage({ club, roomId, loadingMain }: { club: DocumentData | undefine
             <div className="flex flex-col-reverse md:flex-row mt-3 relative">
                 <div className="flex-1 p-3 ">
                     <ClubButtons members={club?.users.length | 0} alreadyMember={flag} userId={query.data?.userId!} roomId={roomId} admin={club?.createdBy} roomName={club?.roomName} />
-                    <ClubPosts roomId={roomId} />
+                    <PostProvider>
+                        <ClubPosts roomId={roomId} />
+                    </PostProvider>
                 </div>
 
 

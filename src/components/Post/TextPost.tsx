@@ -1,32 +1,13 @@
 import service from "@/firebase/firestore"
 import { DocumentData } from "firebase/firestore"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import TextPostCard from "./TextPostCard";
 import NoPost from "./NoPost";
+import { PostConext } from "@/context/PostContext";
 
 function TextPost({ roomId }: { roomId: string }) {
-    const [posts, setPosts] = useState<DocumentData[] | null>()
-    const [error, setError] = useState<string | null>(null);
-    useEffect(() => {
-        let isMounted = true;
 
-        service.getTextPost({ roomID: roomId, limit: 10 })
-            .then(res => {
-                if (isMounted) {
-                    setPosts(res);
-                    setError(null); // Clear any previous error
-                }
-            })
-            .catch(err => {
-                if (isMounted) {
-                    console.error('Failed to fetch posts:', err);
-                    setError('Failed to load posts'); // Update error state
-                }
-            });
-        return () => {
-            isMounted = false;
-        };
-    }, [roomId]);
+    const { textPost: posts } = useContext(PostConext)
     return (
         <div className="mt-3">
             <ul>
