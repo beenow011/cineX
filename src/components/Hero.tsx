@@ -12,11 +12,31 @@ import { trpc } from "@/app/_trpc/client";
 import { usePathname, useRouter } from "next/navigation";
 import { Features } from "./FeatureList";
 import { useEffect } from "react";
+import { HoverEffect } from "./ui/card-hover-effect";
+import { absoluteUrl } from "@/lib/utils";
 
 export const Hero = () => {
 
     // console.log(userId)
     const navigate = useRouter()
+    const projects = [
+        {
+            title: "Shanks: The Movie Guru",
+            description: ' Shanks is a chatbot designed to answer all your movie-related questions. Whether you need a plot summary, an ending explained, or details about the cast and crew, Shanks has you covered.',
+            link: `${absoluteUrl('/shanks')}`,
+        },
+        {
+            title: "Discover Movies Inspired by Your Favorite Films!",
+            description: ' Discover tailored movie recommendations based on your unique taste. Explore new cinematic horizons and uncover hidden gems inspired by films you love!',
+            link: `${absoluteUrl('/movies/fav-movies')}`,
+        },
+        {
+            title: " Explore Films Based on Your Story Preferences!",
+            description: 'Direct your movie-watching journey with personalized recommendations tailored to your storytelling preferences, from epic adventures to heartfelt romances and gripping mysteries. Explore cinematic masterpieces that align perfectly with your unique vision.',
+            link: `${absoluteUrl('/movies/fav-plots')}`,
+        },
+
+    ];
 
     return (
         <div className="">
@@ -35,6 +55,10 @@ export const Hero = () => {
                 <p className="mt-5 max-w-prose text-slate-300 sm:text-lg">Welcome to our world of cinematic exploration. We believe that every film holds a unique story, waiting to captivate and inspire. With our personalized recommendation system, powered by your <span className="text-cyan-600">favorite movies </span> , we&apos;re here to guide you to your next unforgettable cinematic experience</p>
                 <Link className={buttonVariants({ size: 'lg', className: 'mt-5' })} href={'/dashboard'}>Get started <ArrowRight className="ml-2 h-5 w-5" /></Link>
             </MaxWidthWrapper >
-            <Features />
+            {/* <Features /> */}
+            <div className=" flex flex-col justify-between px-8 w-full bg-gradient-to-r from-black  to-slate-900 shadow-xl  rounded-md  shadow-slate-700 ">
+
+                <HoverEffect items={projects} target="" />
+            </div>
         </div>)
 }

@@ -5,11 +5,15 @@ import { MovieRes } from "@/components/MovieRes";
 import RecmMovies from "@/components/RecmMovies";
 import { Button } from "@/components/ui/button";
 import { MovieContext, MovieProvider } from "@/context/MovieContext";
+import { currentUser } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 import { useContext } from "react";
 
-export default function Page() {
+export default async function Page() {
     // console.log(res)s
     // const { res, loading } = useContext(MovieContext)
+    const user = await currentUser()
+    if (!user || !user.id) redirect('/auth-callback?origin=movies/fav-movies')
     return (
         <div>
             <MovieProvider>

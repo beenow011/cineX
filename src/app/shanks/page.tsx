@@ -5,9 +5,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { MovieContext, MovieProvider } from "@/context/MovieContext";
 import { ShanksProvider } from "@/context/ShanksContext";
 import { currentUser } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 
 const Page = async () => {
     const user = await currentUser()
+    if (!user || !user.id) redirect('/auth-callback?origin=shanks')
     console.log(user?.imageUrl)
     return (
         <div className="mx-3 md:mx-10 h-[calc(100vh-96px)] ">
