@@ -90,12 +90,8 @@ export const Messages = ({ movieID, img }: { movieID: string, img: string | unde
     return (
 
 
-        <div className="flex flex-col-reverse pb-24 md:pb-7 gap-4 h-[100vh]  md:h-[calc(100vh-198px)] overflow-scroll p-3
+        <div className="flex flex-col-reverse pb-24 md:pb-7 scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch gap-4 h-[100vh]  md:h-[calc(100vh-198px)] overflow-scroll p-3
     ">
-
-
-
-
             {
                 isLoading || flag && (
                     <div className="flex items-center space-x-4 my-2">
