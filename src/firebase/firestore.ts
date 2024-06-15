@@ -615,6 +615,16 @@ export class Services {
         throw err;
       }
     }
+    async getAPost({postId}:{postId:string}){
+      try{
+        const data = doc(this.db,'textPost',postId);
+        return await getDoc(data)
+        // console.log(docs)
+        
+      }catch(err){
+        throw err;
+      }
+    }
 }
 
 const service = new Services();
