@@ -8,7 +8,7 @@ import { DocumentData } from "firebase/firestore";
 import { useParams } from "next/navigation"
 import { useEffect, useState } from "react";
 
-function page() {
+function Page() {
     const { postId } = useParams<{ postId: string }>();
     const [ele, setEle] = useState<DocumentData>()
     useEffect(() => {
@@ -35,4 +35,4 @@ function page() {
     )
 }
 
-export default page
+export default Page
