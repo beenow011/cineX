@@ -6,6 +6,7 @@ import { useState } from "react";
 export const HoverEffect = ({
     items,
     className,
+    target
 }: {
     items: {
         title: string;
@@ -13,6 +14,7 @@ export const HoverEffect = ({
         link: string;
     }[];
     className?: string;
+    target: string;
 }) => {
     let [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
@@ -27,7 +29,7 @@ export const HoverEffect = ({
                 <Link
                     href={item?.link}
                     key={item?.link}
-                    target="_blink"
+                    target={target}
                     className="relative group  block p-2 h-full w-full"
                     onMouseEnter={() => setHoveredIndex(idx)}
                     onMouseLeave={() => setHoveredIndex(null)}
@@ -87,7 +89,7 @@ export const CardTitle = ({
     children: React.ReactNode;
 }) => {
     return (
-        <h4 className={cn("text-zinc-100 font-bold tracking-wide mt-4", className)}>
+        <h4 className={cn("text-cyan-400 font-bold tracking-wide mt-4", className)}>
             {children}
         </h4>
     );

@@ -90,7 +90,7 @@ function PlotRecmMovies() {
                 result.length !== 0 ? (
                     <div>
                         <div className="max-w-5xl mx-auto px-8">
-                            <HoverEffect items={projects} />
+                            <HoverEffect items={projects} target='_blink' />
                         </div>
                     </div>
                 ) : (

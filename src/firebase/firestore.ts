@@ -289,7 +289,8 @@ export class Services {
   
         if (docs[0]?.joined?.length > 0) {
           const roomDocsPromises = docs[0].joined.map(async (roomID:string) => {
-            return await this.retrieveRoom({ roomID });
+            const roomData = await this.retrieveRoom({ roomID });
+            return { id:roomID, ...roomData };
           });
   
           const roomDocs = await Promise.all(roomDocsPromises);
