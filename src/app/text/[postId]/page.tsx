@@ -10,10 +10,10 @@ import { useEffect, useState } from "react";
 
 function Page() {
     const { postId } = useParams<{ postId: string }>();
-    const [ele, setEle] = useState<DocumentData>()
+    const [ele, setEle] = useState<DocumentData | null>()
     useEffect(() => {
         if (postId)
-            service.getAPost({ postId: postId as string }).then(res => setEle(res.data())).catch(err => console.log(err))
+            service.getAPost({ postId: postId as string }).then((res) => setEle(res)).catch(err => console.log(err))
     }, [postId])
     return (
         <MaxWidthWrapper className="px-0 mx-auto mt-5 max-w-7xl md:p-8">

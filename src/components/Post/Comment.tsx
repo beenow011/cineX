@@ -1,23 +1,22 @@
-import service from "@/firebase/firestore"
 import { DocumentData } from "firebase/firestore"
-import { useEffect, useState } from "react"
-import parse from "html-react-parser"
-import { MoveUp, ThumbsUp, TriangleAlert } from "lucide-react"
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
-import { trpc } from "@/app/_trpc/client"
 import { toast } from "../ui/use-toast"
+import service from "@/firebase/firestore"
+import { useEffect, useState } from "react"
+import { trpc } from "@/app/_trpc/client"
 import Skeleton from "react-loading-skeleton"
-import { useRouter } from "next/navigation"
-function TextPostCard({ ele }: { ele: DocumentData }) {
-    const router = useRouter()
+import { ThumbsUp, TriangleAlert } from "lucide-react"
+
+function CommentComp({ commentItem }: { commentItem: DocumentData }) {
     const [user, setUser] = useState<DocumentData[] | null>(null)
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
     const [isLiked, setIsLiked] = useState(false)
     const [flag, setFlag] = useState(false)
+    const [commentLoad, setCommentLoad] = useState(false)
+    const [comment, setComment] = useState('')
+    const [commentList, setCommentList] = useState<DocumentData[] | null>(null)
     const query = trpc.getUser.useQuery()
-    const [likes, setLikes] = useState(ele.likes.length as number)
+    const [likes, setLikes] = useState(commentItem.likes.length as number)
     useEffect(() => {
         if (flag) {
             if (isLiked)
@@ -27,7 +26,7 @@ function TextPostCard({ ele }: { ele: DocumentData }) {
         }
     }, [isLiked])
     useEffect(() => {
-        service.getUser({ uId: ele.userId })
+        service.getUser({ uId: commentItem.userId })
             .then(res => {
                 setUser(res)
                 setLoading(false)
@@ -37,13 +36,17 @@ function TextPostCard({ ele }: { ele: DocumentData }) {
                 setError("Failed to load user data")
                 setLoading(false)
             })
-    }, [ele])
+    }, [commentItem])
 
     useEffect(() => {
         if (query.data) {
-            setIsLiked(ele.likes.includes(query.data.userId!))
+            setIsLiked(commentItem.likes.includes(query.data.userId!))
         }
-    }, [ele])
+        if (commentItem.id) {
+            setCommentLoad(true)
+            service.getComments({ postId: commentItem.id }).then(res => setCommentList(res)).catch(err => console.log(err)).finally(() => setCommentLoad(false))
+        }
+    }, [commentItem])
 
     if (loading) {
         return (
@@ -52,7 +55,7 @@ function TextPostCard({ ele }: { ele: DocumentData }) {
             </div>
         )
     }
-
+    // commentList && console.log(commentList)
     if (error) {
         return <div className='bg-slate-600/30 w-full h-36 flex flex-col justify-center items-center'>
             <TriangleAlert className='h-5 w-5 text-white' />
@@ -65,7 +68,7 @@ function TextPostCard({ ele }: { ele: DocumentData }) {
     const likeButton = () => {
         setIsLiked(true)
         setFlag(true)
-        service.addLike({ postId: ele.id, userId: query.data?.userId!, type: 0 })
+        service.addCommentLike({ commentId: commentItem.id, userId: query.data?.userId! })
             .then(res => toast({
                 title: "Successfully Liked!",
                 description: "Your Like as been saved! Thank you",
@@ -81,7 +84,7 @@ function TextPostCard({ ele }: { ele: DocumentData }) {
         setIsLiked(false)
         setFlag(true)
 
-        service.removeLike({ postId: ele.id, userId: query.data?.userId!, type: 0 })
+        service.removeCommentLike({ commentId: commentItem.id, userId: query.data?.userId! })
             .then(res => toast({
                 title: "Successfully Removed the Like!",
                 description: "Your Like as been Removed! Thank you",
@@ -94,39 +97,27 @@ function TextPostCard({ ele }: { ele: DocumentData }) {
             }))
 
     }
-
     return (
-        <div className="w-full bg-slate-600 m-2 p-3 rounded-lg ">
-            <div className="hover:bg-slate-700 p-2" onClick={() => router.push(`/text/${ele.id}`)}>
+        <div>
+            <div className="h-8 w-0.5 ml-6 bg-gray-300">
+
+            </div>
+            <div className="w-full bg-slate-800 p-2">
                 <div className="flex justify-between">
-                    <div className="">
-                        <p className="text-red-600 text-sm">{ele.roomName}</p>
-                        <p className="text-cyan-600 font-semibold">{user && user[0].username}</p>
+                    <p className="text-cyan-600 font-semibold">{user && user[0].username}</p>
+                    <p className="text-sm text-gray-300">{commentItem.createdAt.toDate().toDateString()}</p>
+                </div>
+                <p className="text-white">{commentItem.text}</p>
+                <div className="mt-1 flex align-middle gap-2">
+                    <div className={`border ${isLiked ? 'bg-white text-black' : 'bg-transparent text-white'} border-white rounded-lg p-2 w-fit hover:bg-blue-400 flex gap-2`} onClick={isLiked ? unLikeButton : likeButton}>
+                        <ThumbsUp className=" h-4 w-4" />
                     </div>
-                    <p className="text-sm text-gray-900">{ele.createdAt.toDate().toDateString()}</p>
+                    <p className="text-md text-gray-300 font-semibold py-2">{likes}</p>
                 </div>
-                <div className="mt-2 quill-read-only">
-                    <h1 className="text-white text-xl font-semibold">{ele.title}</h1>
-                    {/* <p className="text-sm mt-2">
-                    {parse(ele.body)}
-                </p> */}
-                    <ReactQuill
 
-                        value={ele.body}
-                        readOnly={true}
-                        theme="bubble" // Use 'bubble' theme which is minimal
-                    />
-                </div>
             </div>
-            <div className="mt-1 flex align-middle gap-2">
-                <div className={`border ${isLiked ? 'bg-white text-black' : 'bg-transparent text-white'} border-white rounded-lg p-2 w-fit hover:bg-blue-400 flex gap-2`} onClick={isLiked ? unLikeButton : likeButton}>
-                    <ThumbsUp className=" h-4 w-4" />
-                </div>
-                <p className="text-md font-semibold py-2">{likes}</p>
-            </div>
-
         </div>
     )
 }
 
-export default TextPostCard
+export default CommentComp

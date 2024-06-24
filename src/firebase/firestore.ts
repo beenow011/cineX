@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
 // import { getDatabase , ref, set, onValue  } from "firebase/database";
-import { Timestamp, arrayRemove, arrayUnion, getDoc, getFirestore, orderBy, startAfter } from "firebase/firestore";
-import { collection, addDoc, getDocs, doc, updateDoc , query, where ,limit } from "firebase/firestore";
+import { Timestamp, arrayRemove, arrayUnion, getDoc, getFirestore, orderBy, query, startAfter } from "firebase/firestore";
+import { collection, addDoc, getDocs, doc, updateDoc , where ,limit } from "firebase/firestore";
 
 import conf from "./config";
 import { randomUUID } from "crypto";
@@ -617,11 +617,86 @@ export class Services {
     }
     async getAPost({postId}:{postId:string}){
       try{
-        const data = doc(this.db,'textPost',postId);
-        return await getDoc(data)
-        // console.log(docs)
-        
+        const docRef = doc(this.db, 'textPost', postId);
+        const docSnapshot = await getDoc(docRef);
+    
+        if (docSnapshot.exists()) {
+          return {
+            id: docSnapshot.id,
+            ...docSnapshot.data()
+          };
+        } else {
+          return null;
+        }
       }catch(err){
+        throw err;
+      }
+    }
+
+    async createComment({postId,userId,text}:{postId:string,userId:string,text:string}){
+      try{
+        const liked:string[] = []
+        console.log(postId,userId,text)
+        const docRef = await addDoc(collection(this.db, "comments"),{
+            userId,postId,text,likes:liked,createdAt:Timestamp.fromDate(new Date())
+        })
+        return docRef;
+      }catch(err){
+        console.log(err)
+        throw err
+      }
+    }
+
+    async getComments({postId}:{postId:string}){
+      try{
+        const baseQuery = query(collection(this.db, "comments"),
+        where("postId", "==", postId),
+        orderBy("createdAt", 'desc'))
+        const querySnapshot = await getDocs(baseQuery)
+
+        if (!querySnapshot.empty) {
+          const docs = querySnapshot.docs.map(doc => {
+            return {
+                id: doc.id,
+                ...doc.data()
+            };
+        });
+        
+          return docs;
+        } else {
+          
+          return null;
+        }
+      }catch(err){
+        console.log(err)
+        throw err;
+      }
+    }
+    async addCommentLike({commentId,userId}:{commentId:string,userId:string}){
+      try{
+      
+          const userDocRef = doc(this.db, "comments", commentId);
+          return await updateDoc(userDocRef,{
+            likes:arrayUnion(userId)
+          })
+
+      }catch(err){
+        console.log(err)
+        throw err;
+      }
+    }
+
+    async removeCommentLike({commentId,userId}:{commentId:string,userId:string}){
+      try{
+      
+          const userDocRef = doc(this.db, "comments", commentId);
+          return await updateDoc(userDocRef,{
+            likes:arrayRemove(userId)
+          })
+       
+
+      }catch(err){
+        console.log(err)
         throw err;
       }
     }
