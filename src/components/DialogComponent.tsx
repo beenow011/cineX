@@ -371,7 +371,7 @@ function DialogComponent() {
                                 />
                             </div>
                         </div>
-                        <div className="grid grid-cols-4 items-center gap-4 text-black">
+                        <div className="grid grid-cols-4 items-center gap-4 mt-9 md:mt-0 text-black">
                             <Label htmlFor="name" className="text-right">
                                 Options
                             </Label>
