@@ -11,7 +11,8 @@ import Skeleton, { SkeletonTheme } from "react-loading-skeleton"
 import { useRouter } from "next/navigation"
 import { Input } from "../ui/input"
 import CommentComp from "./Comment"
-function TextPostCardWIthComment({ ele }: { ele: DocumentData }) {
+import Image from "next/image"
+function MediaPostCardWIthComment({ ele }: { ele: DocumentData }) {
     const router = useRouter()
     const [user, setUser] = useState<DocumentData[] | null>(null)
     const [loading, setLoading] = useState<boolean>(true)
@@ -75,7 +76,7 @@ function TextPostCardWIthComment({ ele }: { ele: DocumentData }) {
     const likeButton = () => {
         setIsLiked(true)
         setFlag(true)
-        service.addLike({ postId: ele.id, userId: query.data?.userId!, type: 0 })
+        service.addLike({ postId: ele.id, userId: query.data?.userId!, type: 1 })
             .then(res => toast({
                 title: "Successfully Liked!",
                 description: "Your Like as been saved! Thank you",
@@ -91,7 +92,7 @@ function TextPostCardWIthComment({ ele }: { ele: DocumentData }) {
         setIsLiked(false)
         setFlag(true)
 
-        service.removeLike({ postId: ele.id, userId: query.data?.userId!, type: 0 })
+        service.removeLike({ postId: ele.id, userId: query.data?.userId!, type: 1 })
             .then(res => toast({
                 title: "Successfully Removed the Like!",
                 description: "Your Like as been Removed! Thank you",
@@ -140,7 +141,7 @@ function TextPostCardWIthComment({ ele }: { ele: DocumentData }) {
 
     return (
         <div>
-            <div className="w-full bg-slate-600 m-2 p-3 rounded-lg " >
+            <div className="w-full bg-slate-600 m-2 p-3 rounded-lg">
                 <div className="flex justify-between">
                     <div className="">
                         <p className="text-red-600 text-sm">{ele.roomName}</p>
@@ -157,9 +158,33 @@ function TextPostCardWIthComment({ ele }: { ele: DocumentData }) {
 
                         value={ele.body}
                         readOnly={true}
-                        className="text-white"
                         theme="bubble" // Use 'bubble' theme which is minimal
                     />
+                </div>
+                <div className="mb-2">
+                    {/* <AspectRatio ratio={ } className="bg-gradient-to-r from-black to-zinc-600"> */}
+                    <ul className="flex gap-2">
+                        {ele.files.map((item: string, i: number) => (
+                            <li key={i} className="flex-1">
+                                {loading ? (
+                                    <Skeleton
+                                        className="my-2 h-full object-contain"
+                                        count={1}
+                                        baseColor="black"
+                                    />
+                                ) : (
+                                    <Image
+                                        src={item}
+                                        alt="Photo by Drew Beamer"
+                                        height={200}
+                                        width={300}
+                                        className="rounded-md h-full object-contain w-full"
+                                    />
+                                )}
+                            </li>
+                        ))}
+                    </ul>
+                    {/* </AspectRatio> */}
                 </div>
                 <div className="mt-1 flex align-middle gap-2">
                     <div className={`border ${isLiked ? 'bg-white text-black' : 'bg-transparent text-white'} border-white rounded-lg p-2 w-fit hover:bg-blue-400 flex gap-2`} onClick={isLiked ? unLikeButton : likeButton}>
@@ -167,7 +192,6 @@ function TextPostCardWIthComment({ ele }: { ele: DocumentData }) {
                     </div>
                     <p className="text-md font-semibold py-2">{likes}</p>
                 </div>
-
             </div>
             <div >
                 <div className="relative">
@@ -185,7 +209,7 @@ function TextPostCardWIthComment({ ele }: { ele: DocumentData }) {
                             <Skeleton className="w-full h-32" />
                         </div>
                     ) : (
-                        commentList?.length === 0 ? (
+                        commentList?.length === 0 || !commentList ? (
                             <div>
                                 <div className='bg-slate-600/30 w-full h-36 flex flex-col justify-center items-center'>
                                     <SquareX className='h-5 w-5 text-white' />
@@ -233,4 +257,4 @@ function TextPostCardWIthComment({ ele }: { ele: DocumentData }) {
     )
 }
 
-export default TextPostCardWIthComment;
+export default MediaPostCardWIthComment;

@@ -9,9 +9,11 @@ import Skeleton from "react-loading-skeleton"
 import { toast } from "../ui/use-toast"
 import { trpc } from "@/app/_trpc/client"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 
 function MediaPostCard({ ele }: { ele: DocumentData }) {
+    const router = useRouter()
     const [user, setUser] = useState<DocumentData[] | null>(null)
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
@@ -109,49 +111,51 @@ function MediaPostCard({ ele }: { ele: DocumentData }) {
     }
     return (
         <div className="w-full bg-slate-600 m-2 p-3 rounded-lg">
-            <div className="flex justify-between">
-                <div className="">
-                    <p className="text-red-600 text-sm">{ele.roomName}</p>
-                    <p className="text-cyan-600 font-semibold">{user && user[0].username}</p>
+            <div className="hover:bg-slate-700 p-2" onClick={() => router.push(`/media/${ele.id}`)}>
+                <div className="flex justify-between">
+                    <div className="">
+                        <p className="text-red-600 text-sm">{ele.roomName}</p>
+                        <p className="text-cyan-600 font-semibold">{user && user[0].username}</p>
+                    </div>
+                    <p className="text-sm text-gray-900">{ele.createdAt.toDate().toDateString()}</p>
                 </div>
-                <p className="text-sm text-gray-900">{ele.createdAt.toDate().toDateString()}</p>
-            </div>
-            <div className="mt-2 quill-read-only">
-                <h1 className="text-white text-xl font-semibold">{ele.title}</h1>
-                {/* <p className="text-sm mt-2">
+                <div className="mt-2 quill-read-only">
+                    <h1 className="text-white text-xl font-semibold">{ele.title}</h1>
+                    {/* <p className="text-sm mt-2">
                     {parse(ele.body)}
                 </p> */}
-                <ReactQuill
+                    <ReactQuill
 
-                    value={ele.body}
-                    readOnly={true}
-                    theme="bubble" // Use 'bubble' theme which is minimal
-                />
-            </div>
-            <div className="mb-2">
-                {/* <AspectRatio ratio={ } className="bg-gradient-to-r from-black to-zinc-600"> */}
-                <ul className="flex gap-2">
-                    {ele.files.map((item: string, i: number) => (
-                        <li key={i} className="flex-1">
-                            {loading ? (
-                                <Skeleton
-                                    className="my-2 h-full object-contain"
-                                    count={1}
-                                    baseColor="black"
-                                />
-                            ) : (
-                                <Image
-                                    src={item}
-                                    alt="Photo by Drew Beamer"
-                                    height={200}
-                                    width={300}
-                                    className="rounded-md h-full object-contain w-full"
-                                />
-                            )}
-                        </li>
-                    ))}
-                </ul>
-                {/* </AspectRatio> */}
+                        value={ele.body}
+                        readOnly={true}
+                        theme="bubble" // Use 'bubble' theme which is minimal
+                    />
+                </div>
+                <div className="mb-2">
+                    {/* <AspectRatio ratio={ } className="bg-gradient-to-r from-black to-zinc-600"> */}
+                    <ul className="flex gap-2">
+                        {ele.files.map((item: string, i: number) => (
+                            <li key={i} className="flex-1">
+                                {loading ? (
+                                    <Skeleton
+                                        className="my-2 h-full object-contain"
+                                        count={1}
+                                        baseColor="black"
+                                    />
+                                ) : (
+                                    <Image
+                                        src={item}
+                                        alt="Photo by Drew Beamer"
+                                        height={200}
+                                        width={300}
+                                        className="rounded-md h-full object-contain w-full"
+                                    />
+                                )}
+                            </li>
+                        ))}
+                    </ul>
+                    {/* </AspectRatio> */}
+                </div>
             </div>
             <div className="mt-1 flex align-middle gap-2">
                 <div className={`border ${isLiked ? 'bg-white text-black' : 'bg-transparent text-white'} border-white rounded-lg p-2 w-fit hover:bg-blue-400 flex gap-2`} onClick={isLiked ? unLikeButton : likeButton}>

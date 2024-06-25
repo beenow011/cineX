@@ -8,8 +8,10 @@ import { Progress } from "../ui/progress"
 import { Button } from "../ui/button"
 import { toast } from "../ui/use-toast"
 import { trpc } from "@/app/_trpc/client"
+import { useRouter } from "next/navigation"
 
 function PollPostCard({ ele }: { ele: DocumentData }) {
+    const router = useRouter()
     const [user, setUser] = useState<DocumentData[] | null>(null)
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
@@ -199,68 +201,70 @@ function PollPostCard({ ele }: { ele: DocumentData }) {
 
     return (
         <div className="w-full bg-slate-600 m-2 p-3 rounded-lg">
-            <div className="flex justify-between">
-                <div className="">
-                    <p className="text-red-600 text-sm">{ele.roomName}</p>
-                    <p className="text-cyan-600 font-semibold">{user && user[0].username}</p>
+            <div className="hover:bg-slate-700 p-2" onClick={() => router.push(`/poll/${ele.id}`)}>
+                <div className="flex justify-between">
+                    <div className="">
+                        <p className="text-red-600 text-sm">{ele.roomName}</p>
+                        <p className="text-cyan-600 font-semibold">{user && user[0].username}</p>
+                    </div>
+                    <p className="text-sm text-gray-900">{ele.createdAt.toDate().toDateString()}</p>
                 </div>
-                <p className="text-sm text-gray-900">{ele.createdAt.toDate().toDateString()}</p>
-            </div>
-            <div className="mt-2 quill-read-only">
-                <h1 className="text-white text-xl font-semibold">{ele.title}</h1>
-                {/* <p className="text-sm mt-2">
+                <div className="mt-2 quill-read-only">
+                    <h1 className="text-white text-xl font-semibold">{ele.title}</h1>
+                    {/* <p className="text-sm mt-2">
                     {parse(ele.body)}
                 </p> */}
-                <ReactQuill
+                    <ReactQuill
 
-                    value={ele.question}
-                    readOnly={true}
-                    theme="bubble" // Use 'bubble' theme which is minimal
-                />
-            </div>
-            <div className="mb-2">
-                {/* <AspectRatio ratio={ } className="bg-gradient-to-r from-black to-zinc-600"> */}
-                <ul className=" flex flex-col gap-2">
-
-
-                    <li className="flex flex-col md:flex-row w-full justify-between">
-                        <div>
-                            <Button onClick={optionOneClicked} className="w-full" disabled={voteFlag}>
-                                {ele.pollOption[0].text}
-                            </Button>
-                        </div>
-                        <div className="flex gap-2">
-                            <Progress value={per1 * 100} className="w-32 mt-1 mr-2" color={yourVote === 1 ? 'bg-cyan-600' : 'bg-primary'} /><span className="ml-2 px-1">{(per1 * 100).toFixed(2)}%</span>
-                        </div>
-                    </li>
-                    <li className="flex flex-col md:flex-row w-full justify-between">
-                        <div>
-                            <Button onClick={optionTwoClicked} className="w-full" disabled={voteFlag}>
-                                {ele.pollOption[1].text}
-                            </Button>
-                        </div>
-                        <div className="flex gap-2 ">
-                            <Progress value={per2 * 100} className="w-32 mt-1 mr-2 " color={yourVote === 2 ? 'bg-cyan-600' : 'bg-primary'} /><span className="ml-2 px-1 ">{(per2 * 100).toFixed(2)}%</span>
-                        </div>
-                    </li>
-                    {
-                        ele.pollOption[2] && (
-                            <li className="flex flex-col md:flex-row w-full justify-between">
-                                <div>
-                                    <Button onClick={optionThreeClicked} className="w-full" disabled={voteFlag}>
-                                        {ele.pollOption[2].text}
-                                    </Button>
-                                </div>
-                                <div className="flex gap-2 relative">
-                                    <Progress value={per3 * 100} className="w-32 mt-1 mr-2" color={yourVote === 3 ? 'bg-cyan-600' : 'bg-primary'} /><div className="ml-2 px-1">{(per3 * 100).toFixed(2)}%</div>
-                                </div>
-                            </li>
-                        )
-                    }
+                        value={ele.question}
+                        readOnly={true}
+                        theme="bubble" // Use 'bubble' theme which is minimal
+                    />
+                </div>
+                <div className="mb-2">
+                    {/* <AspectRatio ratio={ } className="bg-gradient-to-r from-black to-zinc-600"> */}
+                    <ul className=" flex flex-col gap-2">
 
 
-                </ul>
-                {/* </AspectRatio> */}
+                        <li className="flex flex-col md:flex-row w-full justify-between">
+                            <div>
+                                <Button onClick={optionOneClicked} className="w-full" disabled={voteFlag}>
+                                    {ele.pollOption[0].text}
+                                </Button>
+                            </div>
+                            <div className="flex gap-2">
+                                <Progress value={per1 * 100} className="w-32 mt-1 mr-2" color={yourVote === 1 ? 'bg-cyan-600' : 'bg-primary'} /><span className="ml-2 px-1">{(per1 * 100).toFixed(2)}%</span>
+                            </div>
+                        </li>
+                        <li className="flex flex-col md:flex-row w-full justify-between">
+                            <div>
+                                <Button onClick={optionTwoClicked} className="w-full" disabled={voteFlag}>
+                                    {ele.pollOption[1].text}
+                                </Button>
+                            </div>
+                            <div className="flex gap-2 ">
+                                <Progress value={per2 * 100} className="w-32 mt-1 mr-2 " color={yourVote === 2 ? 'bg-cyan-600' : 'bg-primary'} /><span className="ml-2 px-1 ">{(per2 * 100).toFixed(2)}%</span>
+                            </div>
+                        </li>
+                        {
+                            ele.pollOption[2] && (
+                                <li className="flex flex-col md:flex-row w-full justify-between">
+                                    <div>
+                                        <Button onClick={optionThreeClicked} className="w-full" disabled={voteFlag}>
+                                            {ele.pollOption[2].text}
+                                        </Button>
+                                    </div>
+                                    <div className="flex gap-2 relative">
+                                        <Progress value={per3 * 100} className="w-32 mt-1 mr-2" color={yourVote === 3 ? 'bg-cyan-600' : 'bg-primary'} /><div className="ml-2 px-1">{(per3 * 100).toFixed(2)}%</div>
+                                    </div>
+                                </li>
+                            )
+                        }
+
+
+                    </ul>
+                    {/* </AspectRatio> */}
+                </div>
             </div>
             <div className="mt-1 flex align-middle gap-2">
                 <div className={`border ${isLiked ? 'bg-white text-black' : 'bg-transparent text-white'} border-white rounded-lg p-2 w-fit hover:bg-blue-400 flex gap-2`} onClick={isLiked ? unLikeButton : likeButton}>

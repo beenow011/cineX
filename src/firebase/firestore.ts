@@ -632,6 +632,40 @@ export class Services {
         throw err;
       }
     }
+    async getAMediaPost({postId}:{postId:string}){
+      try{
+        const docRef = doc(this.db, 'mediaPost', postId);
+        const docSnapshot = await getDoc(docRef);
+    
+        if (docSnapshot.exists()) {
+          return {
+            id: docSnapshot.id,
+            ...docSnapshot.data()
+          };
+        } else {
+          return null;
+        }
+      }catch(err){
+        throw err;
+      }
+    }
+    async getAPollPost({postId}:{postId:string}){
+      try{
+        const docRef = doc(this.db, 'pollPost', postId);
+        const docSnapshot = await getDoc(docRef);
+    
+        if (docSnapshot.exists()) {
+          return {
+            id: docSnapshot.id,
+            ...docSnapshot.data()
+          };
+        } else {
+          return null;
+        }
+      }catch(err){
+        throw err;
+      }
+    }
 
     async createComment({postId,userId,text}:{postId:string,userId:string,text:string}){
       try{
