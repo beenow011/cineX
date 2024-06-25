@@ -36,7 +36,7 @@ export const MessageInput = () => {
                                 value={msg}
                                 onChange={(e) => setMsg(e.target.value)}
                                 onKeyDown={(e) => {
-                                    if (e.key === 'Enter' && !e.shiftKey) {
+                                    if (e.key === 'Enter' && !e.shiftKey && !btnDisable()) {
                                         e.preventDefault()
                                         setFlag(true)
                                         addMsg()
