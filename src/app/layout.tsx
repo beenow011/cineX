@@ -25,8 +25,8 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <Providers>
-          <body className={inter.className}>
-            <WavyBackground className=" justify-start items-start">
+          <body className={'scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch'}>
+            <WavyBackground className=" justify-start  items-start">
 
 
 

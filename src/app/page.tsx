@@ -9,7 +9,7 @@ export default function Home() {
   return (
 
 
-    <div>
+    <div className=" ">
 
       <UserProvider>
         {/* <MovieRoll src2={1} side="left-0 " /> */}
