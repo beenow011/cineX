@@ -27,7 +27,7 @@ export const GET = async(req: NextRequest , res:NextApiResponse)=>{
     // return res.status(400).json({ error: 'Title and imdbID are required query parameters' });
     try{
       const response = await openai.chat.completions.create({
-        model: 'gpt-3.5-turbo-16k-0613', // Correct model name
+        model: 'gpt-3.5-turbo-16k-0613', // Correct model name use gpt-4-turbo-2024-04-09 in production
         temperature: 0.1, // Adjust the temperature as needed
         stream: false,
         messages: [
@@ -64,11 +64,11 @@ export const GET = async(req: NextRequest , res:NextApiResponse)=>{
         // return 1
 
         const completionResult = response.choices[0].message.content;
-        console.log(completionResult);
+        // console.log(completionResult);
 
         // Extract the JSON array from the completion result
         const jsonResponse = JSON.parse(completionResult!);
-        console.log(jsonResponse);
+        // console.log(jsonResponse);
 
         return NextResponse.json({ result: jsonResponse }, { status: 200 })
     }catch(err){
