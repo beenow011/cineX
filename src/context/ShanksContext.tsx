@@ -48,9 +48,23 @@ export const ShanksProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
     )
 
+    const [linkToId, setLinkToId] = useState<string | null>(null)
+    useEffect(() => {
+        const regex = /tt\d+/;
+        const match = imdbId.match(regex);
+        setLinkToId(match ? match[0] : imdbId);
+    }, [imdbId])
     const searchMovieByID = () => {
-        searchFromApiById({ imdbId })
+        // console.log(imdbId)
+
+        // console.log(imdbId)
+
+        imdbId && searchFromApiById({ imdbId: linkToId ? linkToId : imdbId })
     }
+
+    // const searchMovieByID = () => {
+    //     searchFromApiById({ imdbId })
+    // }
 
     const searchMovieByName = () => {
         searchFromApiByName({ movie })
