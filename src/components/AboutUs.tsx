@@ -50,13 +50,13 @@ function AboutUs() {
                 </div>
                 <div className="md:hidden mx-10  mb-5  ">
                     <p className="text-lg leading-relaxed mb-4">
-                        Welcome to our website! We are passionate about providing you with the most accurate and comprehensive information about movies. Our goal is to make it easy for you to find details about your favorite films, whether you're a casual movie-goer or a dedicated cinephile.
+                        Welcome to our website! We are passionate about providing you with the most accurate and comprehensive information about movies. Our goal is to make it easy for you to find details about your favorite films, whether you&apos;re a casual movie-goer or a dedicated cinephile.
                     </p>
                     <p className="text-lg leading-relaxed mb-4">
                         Our team is made up of movie enthusiasts who are committed to delivering high-quality content. We understand how important it is to have reliable and up-to-date information, which is why we strive to keep our database current and accurate.
                     </p>
                     <p className="text-lg leading-relaxed mb-4">
-                        If you encounter any issues or have any suggestions, please don't hesitate to reach out to us. We're always looking for ways to improve and provide the best experience for our users.
+                        If you encounter any issues or have any suggestions, please don&apos;t hesitate to reach out to us. We&apos;re always looking for ways to improve and provide the best experience for our users.
                     </p>
                     <p className="text-lg leading-relaxed">
                         Thank you for visiting our site. We hope you enjoy exploring and discovering more about the movies you love!
