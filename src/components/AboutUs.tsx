@@ -17,21 +17,24 @@ function AboutUs() {
             name: "Akhil Kumar P",
             designation: "Front End Developer",
             image:
-                "/1.jpg",
+                "/akhil.jpg",
         },
         {
             id: 3,
             name: "Girish G M",
             designation: "UI Designer",
             image:
-                "/2.jpg",
+                "/giri.jpg",
         }
     ];
     return (
         <div className="w-full bg-slate-800 text-zinc-300 flex justify-center items-center p-10">
             <div>
                 <h1 className="text-3xl  font-bold mb-4 text-center text-red-600">About Us</h1>
-                <MaxWidthWrapper className=" mx-10 hidden md:block ">
+                <div className="flex flex-row items-center justify-center mt-10 mb-10 w-full">
+                    <AnimatedTooltip items={people} />
+                </div>
+                <MaxWidthWrapper className="mb-10 mx-10 hidden md:block ">
                     <p className="text-lg leading-relaxed mb-4">
                         Welcome to our website! We are passionate about providing you with the most accurate and comprehensive information about movies. Our goal is to make it easy for you to find details about your favorite films, whether you&apos;re a casual movie-goer or a dedicated cinephile.
                     </p>
@@ -45,9 +48,7 @@ function AboutUs() {
                         Thank you for visiting our site. We hope you enjoy exploring and discovering more about the movies you love!
                     </p>
                 </MaxWidthWrapper>
-                <div className="flex flex-row items-center justify-center mt-10 mb-10 w-full">
-                    <AnimatedTooltip items={people} />
-                </div>
+
                 <div className="md:hidden mx-10  mb-5  ">
                     <p className="text-lg leading-relaxed mb-4">
                         Welcome to our website! We are passionate about providing you with the most accurate and comprehensive information about movies. Our goal is to make it easy for you to find details about your favorite films, whether you&apos;re a casual movie-goer or a dedicated cinephile.

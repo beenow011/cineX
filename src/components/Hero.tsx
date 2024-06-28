@@ -55,9 +55,9 @@ export const Hero = () => {
                 <h1 className="max-w-4xl mt-6 text-3xl font-bold md:text-6xl lg:text-7xl text-white"> Discover Your Next   <span className="text-[#72cfcf]"> Favorite Film </span>with Personalized Recommendations!</h1>
                 <p className="mt-5 max-w-prose text-slate-300 sm:text-lg">Welcome to our world of cinematic exploration. We believe that every film holds a unique story, waiting to captivate and inspire. With our personalized recommendation system, powered by your <span className="text-cyan-600">favorite movies </span> , we&apos;re here to guide you to your next unforgettable cinematic experience</p>
                 <Link className={buttonVariants({ size: 'lg', className: 'mt-5' })} href={'/dashboard'}>Get started <ArrowRight className="ml-2 h-5 w-5" /></Link>
-                <div className="hidden md:flex flex-col justify-between mt-10 px-8 w-full bg-gradient-to-r from-black  to-slate-900 shadow-xl  rounded-md  shadow-slate-700 ">
+                <div className="hidden my-other-step md:flex flex-col justify-between mt-10 px-8 w-full bg-gradient-to-r from-black  to-slate-900 shadow-xl  rounded-md  shadow-slate-700 ">
                     <div className="w-full">
-                        <p className="text-gray-300  text-xl font-bold mt-4">
+                        <p className="text-gray-300  text-xl font-bold my-first-step mt-4">
                             Explore the features
                         </p>
                     </div>
