@@ -90,6 +90,7 @@ function PlotRecmMovies() {
                 result.length !== 0 ? (
                     <div>
                         <div className="max-w-5xl mx-auto px-8">
+                            <p className='font-semibold text-white'> movies related to: <span className='font-bold text-red-600'>{Plot}</span></p>
                             <HoverEffect items={projects} target='_blink' />
                         </div>
                     </div>
